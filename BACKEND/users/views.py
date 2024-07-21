@@ -26,9 +26,9 @@ class MyTokenRefreshView(TokenRefreshView):
 
 class RegisterAPIView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
-    serializer_class = RegisterUserSerializer
+    serializer_class = RegisterUserSerializer  # Use the updated serializer
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
