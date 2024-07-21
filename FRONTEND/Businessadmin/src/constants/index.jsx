@@ -39,7 +39,7 @@ export const pricingOptions = [
     title: "Free",
     price: "$0",
     features: [
-      "Private board sharing",
+      "Limited to 2 Users",
       "5 Gb Storage",
       "Web Analytics",
       "Private Mode",
@@ -49,7 +49,7 @@ export const pricingOptions = [
     title: "Pro",
     price: "$10",
     features: [
-      "Private board sharing",
+      "Upto 10 Users",
       "10 Gb Storage",
       "Web Analytics (Advance)",
       "Private Mode",
@@ -59,7 +59,7 @@ export const pricingOptions = [
     title: "Enterprise",
     price: "$200",
     features: [
-      "Private board sharing",
+      "Unlimited Users",
       "Unlimited Storage",
       "High Performance Network",
       "Private Mode",
@@ -89,7 +89,7 @@ export const testimonials = [
     user: "Ronee Brown",
     company: "Fusion Dynamics",
     image: user4,
-    text: "Working with the team at XYZ Company was a game-changer for our project. Their attention to detail and innovative solutions helped us achieve our goals faster than we thought possible. We are grateful for their expertise and professionalism!",
+    text: "Working with the team at Business Admin was a game-changer for our project. Their attention to detail and innovative solutions helped us achieve our goals faster than we thought possible. We are grateful for their expertise and professionalism!",
   },
   {
     user: "Michael Wilson",
