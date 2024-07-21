@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const SignUpForm = ({ isopen, closeform }) => {
   const [username, setUsername] = useState('');
@@ -16,32 +17,27 @@ const SignUpForm = ({ isopen, closeform }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const response = await fetch('http://127.0.0.1:8000/api/signup/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/register/', {
         username,
         first_name: firstName,
         last_name: lastName,
         email,
         password,
-      }),
-    });
+      });
 
-    const data = await response.json();
-    if (response.ok) {
-      setMessage('Signup successful!');
-      // Optionally, you can clear the form fields here
-      setUsername('');
-      setFirstName('');
-      setLastName('');
-      setEmail('');
-      setPassword('');
-    } else {
-      setMessage(`Signup failed: ${data.error}`);
+      if (response.status === 200) {
+        setMessage('Signup successful!');
+        // Optionally, you can clear the form fields here
+        setUsername('');
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setPassword('');
+      }
+    } catch (error) {
+      setMessage(`Signup failed: ${error.response.data.error}`);
     }
   };
 
