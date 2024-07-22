@@ -41,21 +41,25 @@ class RegisterAPIView(generics.CreateAPIView):
 class LoginAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
+    def get(self, request):
+        # Handle GET request to render login form or provide necessary data
+        return Response({'message': 'Please login using POST method with username and password.'})
 
-        if not username or not password:
-            return Response({'error': 'Please provide both username and password'}, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        if username is None or password is None:
+            return Response({'error': 'Please provide both username and password'}, status=400)
 
         user = authenticate(username=username, password=password)
 
-        if not user:
+        if user:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user': UserSerializer(user).data
+            })
+        else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
-        refresh = RefreshToken.for_user(user)
-
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        })
