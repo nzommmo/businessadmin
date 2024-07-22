@@ -17,6 +17,7 @@ const SignUpForm = ({ isopen, closeform }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Form submitted')
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/register/', {
@@ -25,10 +26,16 @@ const SignUpForm = ({ isopen, closeform }) => {
         last_name: lastName,
         email,
         password,
-      });
+      },
+    {
+      headers:{
+        'Content-Type':'application/json'
+      }
+    });
+    console.log('Response data',response.d)
 
       if (response.status === 200) {
-        setMessage('Signup successful!');
+        setMessage("Signup Successful!");
         // Optionally, you can clear the form fields here
         setUsername('');
         setFirstName('');
@@ -37,9 +44,16 @@ const SignUpForm = ({ isopen, closeform }) => {
         setPassword('');
       }
     } catch (error) {
-      setMessage(`Signup failed: ${error.response.data.error}`);
+    console.error('Error during signup:', error); // Log the full error
+    if (error.response) {
+      // Display specific error messages
+      setMessage(`Signup failed: ${JSON.stringify(error.response.data)}`);
+    } else {
+      // Handle generic errors
+      setMessage('Signup failed: An unexpected error occurred.');
     }
-  };
+  }
+};
 
   return (
     <div
@@ -54,7 +68,11 @@ const SignUpForm = ({ isopen, closeform }) => {
           </button>
           <div className="flex flex-col justify-center items-center">
             <h1 className="text-2xl">Sign Up</h1>
+
+            {message && <p className='text-black bg-green-300 rounded m-5 w-[200px] flex items-center justify-center'>{message}</p>}
+
             <div className="pt-10">
+
               <form onSubmit={handleSubmit}>
                 <label htmlFor="Username">Username</label>
                 <br />
@@ -112,7 +130,6 @@ const SignUpForm = ({ isopen, closeform }) => {
                   </button>
                 </div>
               </form>
-              {message && <p>{message}</p>}
             </div>
           </div>
         </div>
