@@ -1,4 +1,4 @@
-import {testimonials} from "../constants";
+import {testimonials} from "/src/constants";
 const Testimonials = () => {
   return (
     <div className="mt-20 tracking-wide">

@@ -1,25 +1,15 @@
-import NavBar from "./components/NavBar";
-import HeroSection from "./components/HeroSection";
-import Pricing from "./components/Pricing";
-import Testimonials from "./components/Testimonials";
-import Footer from "./components/Footer";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Homepage from "./components/Homepage/Homepage"
+import Dashboard from './components/Dashboard';
 const App = () => {
   return (
-    <>
-    <NavBar/>
-    <HeroSection/>
-    <Pricing/>
-    <Testimonials/>
-    <Footer/>
-
-
-
+  <Router>
+    <Routes>
+      <Route path='/' element={<Homepage/>}/>
+      <Route path='/Dashboard' element={<Dashboard/>}/>
+    </Routes>
+  </Router>
     
-
-
-    
-    
-    </>
   )
 }
 
