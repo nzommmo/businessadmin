@@ -2,7 +2,12 @@ import React from 'react'
 
 const Dashboard = () => {
   return (
-    <div>jjksd</div>
+    <div>
+      <h1>
+        WELCOME
+      </h1>
+
+    </div>
   )
 }
 
