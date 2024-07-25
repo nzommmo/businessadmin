@@ -6,6 +6,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email']  # Add more fields as needed
+        extra_kwargs = {'password': {'write_only': True}}
+
 
 
 
@@ -26,12 +28,10 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             first_name=validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', ''),
         )
-        # Generate activation token
-        user.activation_token = str(uuid.uuid4())
+        user.set_password(validated_data['password'])
         user.save()
-        # Send activation email
-        send_activation_email(user)
         return user
+        
     
 
 
