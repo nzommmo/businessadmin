@@ -18,7 +18,7 @@ const SignUpForm = ({ isopen, closeform }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submitted');
-  
+
     try {
       const response = await axios.post('http://127.0.0.1:8000/register/', {
         username,
@@ -31,12 +31,12 @@ const SignUpForm = ({ isopen, closeform }) => {
           'Content-Type': 'application/json',
         },
       });
-  
+
       console.log('Response status:', response.status); // Log status code
       console.log('Response data:', response.data); // Log response data
-  
-      if (response.status === 200) {
-        setMessage(""); // Correctly access the message from response data
+
+      if (response.status === 201) {
+        setMessage(response.data.message); // Correctly access the message from response data
         // Optionally, you can clear the form fields here
         setUsername('');
         setFirstName('');
@@ -55,7 +55,7 @@ const SignUpForm = ({ isopen, closeform }) => {
       }
     }
   };
-  
+
   return (
     <div
       id="Sign"
@@ -67,9 +67,13 @@ const SignUpForm = ({ isopen, closeform }) => {
           <button className="text-black text-xl place-self-end z-50" onClick={closeform}>
             X
           </button>
+
           <div className="flex flex-col justify-center items-center">
-            <h1 className="text-2xl">Sign Up</h1>
+            <h1 className="text-2xl pb-4">Sign Up</h1>
+            {message && <p className='text-black bg-green-400 rounded px-5 '>{message}</p>}
+
             <div className="pt-10">
+
               <form onSubmit={handleSubmit}>
                 <label htmlFor="Username">Username</label>
                 <br />
@@ -127,7 +131,6 @@ const SignUpForm = ({ isopen, closeform }) => {
                   </button>
                 </div>
               </form>
-              {message && <p>{message}</p>}
             </div>
           </div>
         </div>
