@@ -5,9 +5,8 @@ from .models import Supplier, Category, Item, Sale
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']  # Add more fields as needed
-        extra_kwargs = {'password': {'write_only': True}}
-
+        fields = ['email', 'username', 'password']  # Add more fields as needed
+        
 
 
 
