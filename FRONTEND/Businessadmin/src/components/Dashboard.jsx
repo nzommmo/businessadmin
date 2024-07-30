@@ -1,74 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import Card from '/src/constants/cards'; // Ensure this path is correct
+import React, { useState } from 'react';
+import Categories from './Dashboard/Categories';
 
 const Dashboard = () => {
-  const [categories, setCategories] = useState([]);
-  const [error, setError] = useState(null);
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyMjg0NDQ1LCJpYXQiOjE3MjIyODQxNDUsImp0aSI6IjMyODY2NTdjZDUyZDRmMjE4ODk0NDg1YTBjZWY4MGU1IiwidXNlcl9pZCI6MjZ9.L2rCTgWkrJmhcDrk-TqNGoVuFp_sGqXRbkVx7g2kcuA'; // Replace with your actual token
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [showCategories, setShowCategories] = useState(false);
 
-  useEffect(() => {
-    console.log('Token being sent:', token);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
-    fetch('http://127.0.0.1:8000/categories/', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`, // Ensure this is correct
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => setCategories(data))
-      .catch(error => {
-        console.error('Error fetching categories:', error);
-        setError(`Failed to load categories: ${error.message}`);
-      });
-  }, [token]);
+  const handleInventoryClick = (event) => {
+    event.preventDefault(); // Prevent the default link behavior
+    setShowCategories(true); // Show the Categories component
+  };
 
   return (
-    <div>
-      <div className='flex flex-col gap-0.5'>
-        <div className='border'>
-          <nav className='bg-white text-black'>
-            <p>Business Admin</p>
-          </nav>
+    <div className="flex">
+      {isSidebarOpen && (
+        <div className="bg-white text-black md:w-[200px] h-screen sm:w-[200px] flex flex-col gap-4 px-0.5 border tracking-wide">
+          <div className="flex justify-end p-2">
+            <button onClick={toggleSidebar} className="text-black text-xl">X</button>
+          </div>
+          <div>
+            <h6 className="text-l underline pb-3">Management</h6>
+            <ul>
+              <li><a href="#" onClick={handleInventoryClick}>Inventory</a></li>
+              <li><a href="#">Policies & Licences</a></li>
+            </ul>
+          </div>
+          <div className="my-3">
+            <h6 className="underline pb-2">Team Work</h6>
+            <p>Tasks</p>
+            <ul className="flex flex-col gap-2">
+              <li><a href="#">Pending Tasks</a></li>
+              <li><a href="#">Assign Tasks</a></li>
+              <li><a href="#">Submitted Tasks</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6 className="underline">Account</h6>
+            <ul>
+              <li><a href="#">Settings</a></li>
+            </ul>
+          </div>
         </div>
-        <div className='flex flex-row'>
-          <div className='bg-white text-black w-[200px] h-screen flex flex-col gap-4 px-0.5 border tracking-wide'>
-            <div>
-              <h6 className='text-l underline pb-3'>Management</h6>
-              <p>Inventory</p>
-              <p>Policies & Licences</p>
-            </div>
-            <div className='my-3'>
-              <h6 className='underline pb-2'>Team Work</h6>
-              <p>Tasks</p>
-              <ul className='flex flex-col gap-2'>
-                <li>Pending Tasks</li>
-                <li>Assign Tasks</li>
-                <li>Submitted Tasks</li>
-              </ul>
-            </div>
-            <div>
-              <h6 className='underline'>Account</h6>
-              <ul>
-                <li>Settings</li>
-              </ul>
-            </div>
-          </div>
-          <div className='mx-20 my-4 flex gap-4 '>
-            {error ? (
-              <div className='text-red-500'>{error}</div>
-            ) : (
-              categories.map(category => (
-                <Card key={category.id} category={category} />
-              ))
-            )}
-          </div>
+      )}
+      <div className="flex-1">
+        {!isSidebarOpen && (
+          <button onClick={toggleSidebar} className="m-2 p-2 bg-gray-200 text-black">
+            Open Sidebar
+          </button>
+        )}
+        <div>
+          {showCategories && <Categories />}
         </div>
       </div>
     </div>
