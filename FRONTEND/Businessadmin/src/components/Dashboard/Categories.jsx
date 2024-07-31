@@ -5,8 +5,10 @@ import { PlusCircleIcon, TrashIcon } from 'lucide-react'; // Import TrashIcon fo
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [items, setItems] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [error, setError] = useState(null);
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNDIxOTAxLCJpYXQiOjE3MjI0MjE2MDEsImp0aSI6IjBiNGQ2MzA4YmVkZTRiODdhZTEyMmUwM2YxMTJmZWUwIiwidXNlcl9pZCI6MjZ9.zHfHJMyk8lw4Prz0hXKpcsKvCMhq4C4ZOjKO8hcLgBs'; // Replace with your actual token
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNDM2OTk1LCJpYXQiOjE3MjI0MzY2OTUsImp0aSI6ImQ1MWVhMWNmNjIxYTRhNmE5NDk1YjkyYjdhZmViZjg5IiwidXNlcl9pZCI6MjZ9.-xPOk0-IxWhpgsOFCQJLUEQZbW8CktPEBzzfy8L6wko'; // Replace with your actual token
 
   useEffect(() => {
     console.log('Token being sent:', token);
@@ -89,13 +91,33 @@ const Categories = () => {
     }
   };
 
-  const handleViewItems = (categoryId) => {
-    alert(`View items for category ID: ${categoryId}`);
-    // Implement navigation or fetching items logic here
+  const handleViewItems = async (categoryId) => {
+    setSelectedCategoryId(categoryId);
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/categories/${categoryId}/items/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const itemsData = await response.json();
+        setItems(itemsData);
+      } else {
+        const errorData = await response.json();
+        setError(`Error: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error fetching items:', error);
+      setError('Failed to load items');
+    }
   };
 
   return (
-    <div>
+    <div className=''>
       <div className='flex justify-end'>
         <div className='flex items-center space-x-2'>
           <input
@@ -130,6 +152,16 @@ const Categories = () => {
               >
                 <TrashIcon className='pb-2' />
               </button>
+              {selectedCategoryId === category.id && items.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="text-lg font-bold">Items in {category.name}:</h3>
+                  <ul className="list-disc list-inside">
+                    {items.map(item => (
+                      <li key={item.id}>{item.name}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ))
         )}
