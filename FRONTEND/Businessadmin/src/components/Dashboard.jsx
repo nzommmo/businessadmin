@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Categories from './Dashboard/Categories';
+import {Menu} from 'lucide-react'
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -47,11 +48,19 @@ const Dashboard = () => {
       )}
       <div className="flex-1">
         {!isSidebarOpen && (
-          <button onClick={toggleSidebar} className="m-2 p-2 bg-gray-200 text-black">
-            Open Sidebar
+          <button onClick={toggleSidebar} className="m-2 p-2  text-gray">
+            
+            <Menu/>
           </button>
         )}
         <div>
+          {!showCategories && (
+            <div className="welcome-message p-4 text-center">
+          
+              <h1>Welcome to the Dashboard</h1>
+              <p>Select a category from the sidebar to view details.</p>
+            </div>
+          )}
           {showCategories && <Categories />}
         </div>
       </div>
