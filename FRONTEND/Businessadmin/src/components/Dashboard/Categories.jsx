@@ -1,49 +1,140 @@
 import React, { useEffect, useState } from 'react';
 import Card from '/src/constants/cards'; // Ensure this path is correct
+import { PlusCircleIcon, TrashIcon } from 'lucide-react'; // Import TrashIcon for delete action
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
+  const [newCategoryName, setNewCategoryName] = useState('');
   const [error, setError] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyMzQzNjIwLCJpYXQiOjE3MjIzNDMzMjAsImp0aSI6ImMzMWYyYzc5ODlhNDQ2MGFiNmJmOTVmNzQ0OWVmNTc2IiwidXNlcl9pZCI6MjZ9.yTfetI-bQB7k0483-XnapzB9zoGh65D3xRnVV2j7VwE'; // Replace with your actual token
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNDIxOTAxLCJpYXQiOjE3MjI0MjE2MDEsImp0aSI6IjBiNGQ2MzA4YmVkZTRiODdhZTEyMmUwM2YxMTJmZWUwIiwidXNlcl9pZCI6MjZ9.zHfHJMyk8lw4Prz0hXKpcsKvCMhq4C4ZOjKO8hcLgBs'; // Replace with your actual token
 
   useEffect(() => {
-    // Temporary static data for testing
-    const staticCategories = [
-      { id: 1, name: 'Category 1' },
-      { id: 2, name: 'Category 2' },
-      { id: 3, name: 'Category 3' },
-      { id: 4, name: 'Category 4' },
-      { id: 5, name: 'Category 5' },
-      { id: 6, name: 'Category 6' },
-      { id: 7, name: 'Category 7' },
-      { id: 8, name: 'Category 8' },
-      { id: 9, name: 'Category 9' },
-      { id: 10, name: 'Category 10' },
-    ];
-    setCategories(staticCategories);
-  }, []);
+    console.log('Token being sent:', token);
+
+    fetch('http://127.0.0.1:8000/categories/', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`, 
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => setCategories(data))
+      .catch(error => {
+        console.error('Error fetching categories:', error);
+        setError(`Failed to load categories: ${error.message}`);
+      });
+  }, [token]);
+
+  const handleAddCategory = async () => {
+    if (newCategoryName.trim() === '') {
+      alert('Category name cannot be empty');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/categories/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ name: newCategoryName })
+      });
+
+      if (response.ok) {
+        const newCategory = await response.json();
+        setCategories([...categories, newCategory]);
+        setNewCategoryName('');
+        setError(null); // Clear any previous errors
+      } else {
+        const errorData = await response.json();
+        setError(`Error: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error adding category:', error);
+      setError('Failed to add category');
+    }
+  };
+
+  const handleDeleteCategory = async (id) => {
+    const isConfirmed = window.confirm('Are you sure you want to delete this category?');
+
+    if (!isConfirmed) return;
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/categories/${id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        setCategories(categories.filter(category => category.id !== id));
+        setError(null); // Clear any previous errors
+      } else {
+        const errorData = await response.json();
+        setError(`Error: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      setError('Failed to delete category');
+    }
+  };
+
+  const handleViewItems = (categoryId) => {
+    alert(`View items for category ID: ${categoryId}`);
+    // Implement navigation or fetching items logic here
+  };
 
   return (
     <div>
       <div className='flex justify-end'>
-        <div>
-          <button><span>+</span> Add</button>
+        <div className='flex items-center space-x-2'>
+          <input
+            type="text"
+            value={newCategoryName}
+            onChange={(e) => setNewCategoryName(e.target.value)}
+            className="border px-4 py-2 rounded"
+            placeholder="Category name"
+          />
+          <button 
+            className="flex items-center my-2 space-x-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            onClick={handleAddCategory}
+          >
+            <PlusCircleIcon />
+            <span>Add</span>
+          </button>
         </div>
-
       </div>
-       <div className="ms-10 me-5 my-4 grid gap-3 grid-cols-1 sm:grid-cols-2 grid-rows-5 flex gap-5 lg:grid-cols-5">
-      {error ? (
-        <div className="text-red-500 mx-2 gap-20">{error}</div>
-      ) : (
-        categories.map(category => (
-          <Card key={category.id} category={category} />
-        ))
-      )}
+      <div className="ms-10 me-5 my-4 grid gap-3 grid-cols-1 sm:grid-cols-2 grid-rows-5 flex gap-5 lg:grid-cols-5">
+        {error ? (
+          <div className="text-red-500 mx-2 gap-20">{error}</div>
+        ) : (
+          categories.map(category => (
+            <div key={category.id} className="relative">
+              <Card 
+                category={category} 
+                onViewItems={handleViewItems} // Pass the handleViewItems function
+              />
+              <button 
+                onClick={() => handleDeleteCategory(category.id)}
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+              >
+                <TrashIcon className='pb-2' />
+              </button>
+            </div>
+          ))
+        )}
+      </div>
     </div>
-
-    </div>
-   
   );
 };
 
