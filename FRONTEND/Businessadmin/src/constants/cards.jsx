@@ -13,7 +13,7 @@ const Card = ({ category, supplier, onViewItems }) => {
           <div className='flex items-center justify-center'>
             <button
               onClick={() => onViewItems(category.id)}
-              className="bg-green-500 my-2 text-white px-4 py-2 rounded hover:bg-green-600"
+              className="bg-Customl my-2 text-white px-4 py-2 rounded hover:bg-CustomGold"
             >
               View Items
             </button>

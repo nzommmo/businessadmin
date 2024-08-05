@@ -46,13 +46,13 @@ const Footer = () => {
                 Leave Us A Review
                 <div className='pt-2'>
                     <textarea name="" id="" cols="30" rows="5"className='focus:outline-none rounded ' placeholder='Type your message here...'></textarea> <br />
-                    <button className='my-4 float-right bg-white text-black rounded px-5'>Send</button>
+                    <button className='my-4 float-right bg-Customl text-white rounded px-5'>Send</button>
 
                 </div>
             </div>
         </div>
         <div className='pt-5 flex justify-center items-center'>
-    <p>Business Admin  <span className=''>copyright</span>  2024</p>
+    <p className='text-CustomGold'>Business Admin  <span className='text'>copyright</span>  2024</p>
 </div>
 
     </div>

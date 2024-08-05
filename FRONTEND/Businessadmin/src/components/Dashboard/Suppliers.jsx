@@ -13,7 +13,7 @@ const Suppliers = () => {
   });
   const [error, setError] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNDM2NzY5LCJpYXQiOjE3MjI0MzY0NjksImp0aSI6IjQxZmE5ZWQyMDI0YTRmNDA5YWVjZWRmOTQ1NGVlOTU3IiwidXNlcl9pZCI6MjZ9.m1LSX_XQGiEQh9ZUT952NYPe9CNKQF2Sc1CzNsevHpU'; // Replace with your actual token
+  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyODY2NDEyLCJpYXQiOjE3MjI4NjYxMTIsImp0aSI6IjI0MWI4OWMyOTdlODQ5ZGM5MWE0NWZkYTQ2NTBjZTNmIiwidXNlcl9pZCI6MjZ9.j5l1AqHZMC-WchHX8qJAFovDjjwg2is2_bBVLjSJyMk'; // Replace with your actual token
 
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -106,7 +106,7 @@ const Suppliers = () => {
       <div className='flex justify-end'>
         <div className='flex items-center space-x-2'>
           <button 
-            className="flex items-center my-2 space-x-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="flex items-center my-2 space-x-2 bg-CustomGold text-white px-4 py-2 rounded "
             onClick={() => setIsAdding(true)}
           >
             <PlusCircleIcon />
@@ -155,7 +155,7 @@ const Suppliers = () => {
               placeholder="Address"
             />
             <button 
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+              className="bg-Customl text-white px-4 py-2 rounded "
               onClick={handleAddSupplier}
             >
               Submit

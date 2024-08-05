@@ -63,8 +63,8 @@ const SignUpForm = ({ isopen, closeform }) => {
       onClick={handleCloseForm}
     >
       <div className="w-[400px]">
-        <div className="bg-white text-black p-2 rounded flex flex-col my-0">
-          <button className="text-black text-xl place-self-end z-50" onClick={closeform}>
+        <div className="bg-black text-white p-2 rounded flex flex-col my-0">
+          <button className="text-Customl text-xl place-self-end z-50" onClick={closeform}>
             X
           </button>
 
@@ -81,7 +81,7 @@ const SignUpForm = ({ isopen, closeform }) => {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="my-2 bg-neutral-400 rounded w-[300px] h-[28px]"
+                  className="my-2 text- bg-white-400 rounded w-[300px] h-[28px]"
                   required
                 />
                 <br />
@@ -91,7 +91,7 @@ const SignUpForm = ({ isopen, closeform }) => {
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="my-2 bg-neutral-400 rounded w-[300px] h-[28px]"
+                  className="my-2 bg-white-400 rounded w-[300px] h-[28px]"
                   required
                 />
                 <br />
@@ -101,7 +101,7 @@ const SignUpForm = ({ isopen, closeform }) => {
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="my-2 bg-neutral-400 rounded w-[300px] h-[28px]"
+                  className="my-2 bg-white-400 rounded w-[300px] h-[28px]"
                   required
                 />
                 <br />
@@ -111,7 +111,7 @@ const SignUpForm = ({ isopen, closeform }) => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="my-2 bg-neutral-400 rounded w-[300px] h-[28px]"
+                  className="my-2 bg-white-400 rounded w-[300px] h-[28px]"
                   required
                 />
                 <br />
@@ -121,12 +121,12 @@ const SignUpForm = ({ isopen, closeform }) => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-neutral-400 rounded w-[300px] h-[28px]"
+                  className="bg-white-400 rounded w-[300px] h-[28px]"
                   required
                 />
                 <br />
                 <div className="flex justify-center items-center pb-20">
-                  <button type="submit" className="bg-black text-white text-xl px-10 mt-10 rounded">
+                  <button type="submit" className="bg-CustomGold text-white text-xl px-10 mt-10 rounded">
                     Sign Up
                   </button>
                 </div>

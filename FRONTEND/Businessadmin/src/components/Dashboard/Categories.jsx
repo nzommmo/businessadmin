@@ -8,7 +8,7 @@ const Categories = () => {
   const [items, setItems] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [error, setError] = useState(null);
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNDM2OTk1LCJpYXQiOjE3MjI0MzY2OTUsImp0aSI6ImQ1MWVhMWNmNjIxYTRhNmE5NDk1YjkyYjdhZmViZjg5IiwidXNlcl9pZCI6MjZ9.-xPOk0-IxWhpgsOFCQJLUEQZbW8CktPEBzzfy8L6wko'; // Replace with your actual token
+  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyODY2NDEyLCJpYXQiOjE3MjI4NjYxMTIsImp0aSI6IjI0MWI4OWMyOTdlODQ5ZGM5MWE0NWZkYTQ2NTBjZTNmIiwidXNlcl9pZCI6MjZ9.j5l1AqHZMC-WchHX8qJAFovDjjwg2is2_bBVLjSJyMk'; // Replace with your actual token
 
   useEffect(() => {
     console.log('Token being sent:', token);
@@ -128,7 +128,7 @@ const Categories = () => {
             placeholder="Category name"
           />
           <button 
-            className="flex items-center my-2 space-x-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="flex items-center my-2 space-x-2 bg-CustomGold text-white px-4 py-2 rounded "
             onClick={handleAddCategory}
           >
             <PlusCircleIcon />
