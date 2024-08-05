@@ -29,19 +29,19 @@ const Dashboard = () => {
         </div>
         <div>
           <h6 className="text-l underline pb-3">Management</h6>
-          <ul>
-            <li><a href="#" onClick={handleInventoryClick}>Inventory</a></li>
-            <li><a href="#" onClick={handleLicencesClick}>Policies & Licences</a></li>
-            <li><a href="#" onClick={handleSuppliersClick}>Suppliers</a></li>
+          <ul className='flex flex-col gap-2'>
+            <li><a className='hover:text-CustomGold ' href="#" onClick={handleInventoryClick}>Inventory</a></li>
+            <li><a className='hover:text-CustomGold ' href="#" onClick={handleLicencesClick}>Policies & Licences</a></li>
+            <li><a  className='hover:text-CustomGold ' href="#" onClick={handleSuppliersClick}>Suppliers</a></li>
           </ul>
         </div>
         <div className="my-3">
           <h6 className="underline pb-2">Team Work</h6>
           <p>Tasks</p>
           <ul className="flex flex-col gap-2">
-            <li><a href="#">Pending Tasks</a></li>
-            <li><a href="#">Assign Tasks</a></li>
-            <li><a href="#">Submitted Tasks</a></li>
+            <li><a className='hover:text-CustomGold ' href="#">Pending Tasks</a></li>
+            <li><a  className='hover:text-CustomGold 'href="#">Assign Tasks</a></li>
+            <li><a className='hover:text-CustomGold ' href="#">Submitted Tasks</a></li>
           </ul>
         </div>
         <div>

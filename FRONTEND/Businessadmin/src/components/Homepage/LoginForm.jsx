@@ -49,9 +49,9 @@ const LoginForm = ({ isvisible, onClose }) => {
     <Fragment>
       <div id="wrapper" className='fixed inset-0 bg-black z-10 bg-opacity-25 backdrop-blur-sm flex justify-center items-center' onClick={handleClose}>
         <div className='w-[400px] '>
-          <div className='bg-white text-black p-2 rounded flex flex-col my-0 pt-'>
+          <div className='bg-black text-white  p-2 rounded flex flex-col my-0 pt-'>
 
-            <button className='text-black text-xl place-self-end z-50' onClick={onClose}>
+            <button className='text-Customl text-xl place-self-end z-50' onClick={onClose}>
               X
             </button>
             <div className='flex flex-col justify-center items-center'>
@@ -62,7 +62,7 @@ const LoginForm = ({ isvisible, onClose }) => {
                   <label htmlFor="Username">Username</label> <br />
                   <input
                     type="text"
-                    className='my-2 bg-neutral-400 rounded w-[300px] h-[28px]'
+                    className='my-2 bg-white-400 rounded w-[300px] h-[28px]'
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
@@ -71,16 +71,19 @@ const LoginForm = ({ isvisible, onClose }) => {
                   <input
                     type="password"
                     name="password"
-                    className='bg-neutral-400 rounded w-[300px] h-[28px]'
+                    className='bg-whire-400 rounded w-[300px] h-[28px]'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   /> <br />
-                  <div className='flex justify-center items-center pb-20'>
-                    <button className='bg-black text-white text-xl px-10 mt-10 rounded' type='submit'>Login</button>
+                  <div className='flex justify-center items-center pb-10'>
+                    <button className='bg-CustomGold text-white text-xl px-10 mt-10 rounded' type='submit'>Login</button>
+                  </div>
+                  <div className='flex justify-center items-center'>
+                    <p>Do Not Have An Account Yet </p>
                   </div>
                   <div className='flex justify-center items-center pb-20'>
-                    <button type='button' className='bg-black text-white text-xl px-10 mt-10 rounded' onClick={() => setShowForm(true)}>Sign Up</button>
+                    <button type='button' className='bg-Customl text-white text-xl px-10 mt-1 rounded' onClick={() => setShowForm(true)}>Sign Up</button>
                   </div>
                 </form>
               </div>
