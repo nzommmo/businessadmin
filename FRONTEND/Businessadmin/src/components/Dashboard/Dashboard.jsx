@@ -32,7 +32,7 @@ const Dashboard = () => {
           <ul className='flex flex-col gap-2'>
             <li><a className='hover:text-CustomGold ' href="#" onClick={handleInventoryClick}>Inventory</a></li>
             <li><a className='hover:text-CustomGold ' href="#" onClick={handleLicencesClick}>Policies & Licences</a></li>
-            <li><a  className='hover:text-CustomGold ' href="#" onClick={handleSuppliersClick}>Suppliers</a></li>
+            <li><a className='hover:text-CustomGold ' href="#" onClick={handleSuppliersClick}>Suppliers</a></li>
           </ul>
         </div>
         <div className="my-3">
@@ -40,7 +40,7 @@ const Dashboard = () => {
           <p>Tasks</p>
           <ul className="flex flex-col gap-2">
             <li><a className='hover:text-CustomGold ' href="#">Pending Tasks</a></li>
-            <li><a  className='hover:text-CustomGold 'href="#">Assign Tasks</a></li>
+            <li><a className='hover:text-CustomGold ' href="#">Assign Tasks</a></li>
             <li><a className='hover:text-CustomGold ' href="#">Submitted Tasks</a></li>
           </ul>
         </div>
@@ -52,10 +52,10 @@ const Dashboard = () => {
         </div>
       </div>
       
-      <div className="ml-[200px] overflow-y-auto">
+      <div className={`ml-[200px] flex-1 overflow-y-auto ${showComponent === '' ? 'flex justify-center items-center' : ''}`}>
         <div className="w-full">
           {showComponent === '' && (
-            <div className="welcome-message text-center">
+            <div className="flex flex-col items-center justify-center h-full text-center">
               <h1>Welcome to the Dashboard</h1>
               <p>Select a category from the sidebar to view details.</p>
             </div>

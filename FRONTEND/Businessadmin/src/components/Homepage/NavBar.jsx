@@ -3,8 +3,7 @@ import LoginForm from './LoginForm';
 import logo from "../../assets/profile-pictures/logo.png";
 
 const NavBar = () => {
-  const [showModal, setShowModal] = useState(false);
-
+  const [showmodal, setshowmodal] = useState(false)
   return (
     <Fragment>
       <div className="relative h-screen">
@@ -24,12 +23,9 @@ const NavBar = () => {
                   <li><a href="#">About Us</a></li>
                   <li><a href="#">Contact Us</a></li>
                   <li>
-                    <button
-                      className="bg-CustomGold px-4 text-black rounded"
-                      onClick={() => setShowModal(true)}
-                    >
-                      Login
-                    </button>
+                  <button className='bg-CustomGold px-4 text-black rounded'  href="LoginForm.jsx" onClick={()=>
+              setshowmodal(true)
+            }>Login</button>
                   </li>
                 </ul>
               </div>
@@ -49,8 +45,9 @@ const NavBar = () => {
             </div>
           </div>
         </div>
-        <LoginForm isVisible={showModal} onClose={() => setShowModal(false)} />
-      </div>
+        <LoginForm isvisible={showmodal} onClose={()=>
+  setshowmodal(false)
+}/>      </div>
     </Fragment>
   );
 }

@@ -20,7 +20,7 @@ const LoginForm = ({ isvisible, onClose }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/login/', {
+      const response = await axios.post('http://127.0.0.1:8000/token/', {
         username,
         password,
       }, {
@@ -30,6 +30,8 @@ const LoginForm = ({ isvisible, onClose }) => {
       });
 
       if (response.status === 200) {
+        localStorage.setItem('accessToken', response.data.access);
+        localStorage.setItem('refreshToken', response.data.refresh);
         // Redirect to the dashboard
         navigate('/dashboard');
       }
