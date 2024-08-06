@@ -4,7 +4,7 @@ import Card from '/src/constants/cards'; // Ensure this path is correct
 const Dashboard = () => {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyMjg0NDQ1LCJpYXQiOjE3MjIyODQxNDUsImp0aSI6IjMyODY2NTdjZDUyZDRmMjE4ODk0NDg1YTBjZWY4MGU1IiwidXNlcl9pZCI6MjZ9.L2rCTgWkrJmhcDrk-TqNGoVuFp_sGqXRbkVx7g2kcuA'; // Replace with your actual token
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyMjg2MTczLCJpYXQiOjE3MjIyODU4NzMsImp0aSI6IjYxZTg2OGRlNDcyZDQ2ZDA4YzhmOWEyZWM0OTY3NmRmIiwidXNlcl9pZCI6Nn0.-FZJAeP296B9xToPF-NNGYlW_oYJ81DWXt1KJn_zzTIInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyMjg0NDQ1LCJpYXQiOjE3MjIyODQxNDUsImp0aSI6IjMyODY2NTdjZDUyZDRmMjE4ODk0NDg1YTBjZWY4MGU1IiwidXNlcl9pZCI6MjZ9.L2rCTgWkrJmhcDrk-TqNGoVuFp_sGqXRbkVx7g2kcuA'; // Replace with your actual token
 
   useEffect(() => {
     console.log('Token being sent:', token);
