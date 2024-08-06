@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Card from '/src/constants/cards'; // Ensure this path is correct
-import { PlusCircleIcon, TrashIcon } from 'lucide-react'; // Import TrashIcon for delete action
+import axiosInstance from '/src/constants/axiosInstance'; // Ensure this path is correct
+import Card from '/src/constants/cards';
+import { PlusCircleIcon, TrashIcon } from 'lucide-react';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -8,30 +9,15 @@ const Categories = () => {
   const [items, setItems] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [error, setError] = useState(null);
-  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyODY2NDEyLCJpYXQiOjE3MjI4NjYxMTIsImp0aSI6IjI0MWI4OWMyOTdlODQ5ZGM5MWE0NWZkYTQ2NTBjZTNmIiwidXNlcl9pZCI6MjZ9.j5l1AqHZMC-WchHX8qJAFovDjjwg2is2_bBVLjSJyMk'; // Replace with your actual token
 
   useEffect(() => {
-    console.log('Token being sent:', token);
-
-    fetch('http://127.0.0.1:8000/categories/', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`, 
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => setCategories(data))
+    axiosInstance.get('/categories/')
+      .then(response => setCategories(response.data))
       .catch(error => {
         console.error('Error fetching categories:', error);
         setError(`Failed to load categories: ${error.message}`);
       });
-  }, [token]);
+  }, []);
 
   const handleAddCategory = async () => {
     if (newCategoryName.trim() === '') {
@@ -40,24 +26,13 @@ const Categories = () => {
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/categories/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ name: newCategoryName })
+      const response = await axiosInstance.post('/categories/', {
+        name: newCategoryName
       });
 
-      if (response.ok) {
-        const newCategory = await response.json();
-        setCategories([...categories, newCategory]);
-        setNewCategoryName('');
-        setError(null); // Clear any previous errors
-      } else {
-        const errorData = await response.json();
-        setError(`Error: ${errorData.message}`);
-      }
+      setCategories([...categories, response.data]);
+      setNewCategoryName('');
+      setError(null);
     } catch (error) {
       console.error('Error adding category:', error);
       setError('Failed to add category');
@@ -70,21 +45,9 @@ const Categories = () => {
     if (!isConfirmed) return;
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/categories/${id}/`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`, 
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        setCategories(categories.filter(category => category.id !== id));
-        setError(null); // Clear any previous errors
-      } else {
-        const errorData = await response.json();
-        setError(`Error: ${errorData.message}`);
-      }
+      await axiosInstance.delete(`/categories/${id}/`);
+      setCategories(categories.filter(category => category.id !== id));
+      setError(null);
     } catch (error) {
       console.error('Error deleting category:', error);
       setError('Failed to delete category');
@@ -95,21 +58,8 @@ const Categories = () => {
     setSelectedCategoryId(categoryId);
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/categories/${categoryId}/items/`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        const itemsData = await response.json();
-        setItems(itemsData);
-      } else {
-        const errorData = await response.json();
-        setError(`Error: ${errorData.message}`);
-      }
+      const response = await axiosInstance.get(`/categories/${categoryId}/items/`);
+      setItems(response.data);
     } catch (error) {
       console.error('Error fetching items:', error);
       setError('Failed to load items');
@@ -128,7 +78,7 @@ const Categories = () => {
             placeholder="Category name"
           />
           <button 
-            className="flex items-center my-2 space-x-2 bg-CustomGold text-white px-4 py-2 rounded "
+            className="flex items-center my-2 space-x-2 bg-CustomGold text-white px-4 py-2 rounded"
             onClick={handleAddCategory}
           >
             <PlusCircleIcon />
