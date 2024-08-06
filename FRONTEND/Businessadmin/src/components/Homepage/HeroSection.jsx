@@ -5,11 +5,11 @@ const HeroSection = () => {
   return (
     <div className='relative mt-20 border-b border-neutral-800 min-h-800px'>
         <div className='text-center'>
-            <span className='bg-neutral-900 text-white-500 rounded-full h-6 text-xl font-medium px-2 py-1 uppercase'>
+            <span className='bg-CustomGold  rounded-full h-6 text-xl font-medium px-4 py-1 uppercase'>
                 FEATURES
             </span>
             <h2 className='text-3xl sm:text-5xl lg:text-6xl mt-10 lg:mt-20 tracking'>
-                Management At Its Best
+                Management At Its <span className='text-CustomGold'>Best</span> 
             </h2>
 
         </div>
@@ -17,7 +17,7 @@ const HeroSection = () => {
             {features.map((feature, index)=>(
                 <div key={index} className='w-full sm:1/2 lg:w-1/3 '>
                     <div className='flex'>
-                        <div className='flex mx-6 h-10 w-10 p-2 bg-neutral-900 text-white-500 justify-center items-center rounded-full'>
+                        <div className='flex mx-6 h-10 w-10 p-2 bg-neutral-900 text-CustomGold justify-center items-center rounded-full'>
                             {feature.icon}
 
                         </div>
