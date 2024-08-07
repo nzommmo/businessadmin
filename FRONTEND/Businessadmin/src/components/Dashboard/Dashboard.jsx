@@ -1,54 +1,113 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Categories from './Categories';
 import Licences from './Licences';
 import Suppliers from './Suppliers';
+import { UserCircle2Icon, BoxIcon, FileTextIcon, UsersIcon, ClockIcon, CheckCircleIcon, SettingsIcon, LogOutIcon } from 'lucide-react';
 
 const Dashboard = () => {
   const [showComponent, setShowComponent] = useState('');
+  const [username, setUsername] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    setUsername(storedUsername || 'Guest'); // Default to 'Guest' if no username found
+  }, []);
 
   const handleInventoryClick = (event) => {
-    event.preventDefault(); // Prevent the default link behavior
-    setShowComponent('categories'); // Show the Categories component
+    event.preventDefault();
+    setShowComponent('categories');
   };
 
   const handleLicencesClick = (event) => {
-    event.preventDefault(); // Prevent the default link behavior
-    setShowComponent('licences'); // Show the Licences component
+    event.preventDefault();
+    setShowComponent('licences');
   };
 
   const handleSuppliersClick = (event) => {
-    event.preventDefault(); // Prevent the default link behavior
-    setShowComponent('suppliers'); // Show the Licences component
+    event.preventDefault();
+    setShowComponent('suppliers');
+  };
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm('Are you sure you want to log out?');
+    if (confirmLogout) {
+      // Clear local storage
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('username');
+      // Redirect to root page
+      navigate('/');
+    }
   };
 
   return (
     <div className="h-screen flex">
-      <div className="bg-white text-black md:w-[200px] sm:w-[200px] h-full fixed flex flex-col gap-4 px-0.5 border tracking-wide z-10 overflow-y-auto">
+      <div className="bg-white text-black px-3 md:w-[200px] sm:w-[200px] h-full fixed flex flex-col gap-4 border tracking-wide z-10 overflow-y-auto">
         <div className="flex justify-end p-2">
           {/* Optional close button for the sidebar */}
         </div>
         <div>
           <h6 className="text-l underline pb-3">Management</h6>
-          <ul className='flex flex-col gap-2'>
-            <li><a className='hover:text-CustomGold ' href="#" onClick={handleInventoryClick}>Inventory</a></li>
-            <li><a className='hover:text-CustomGold ' href="#" onClick={handleLicencesClick}>Policies & Licences</a></li>
-            <li><a className='hover:text-CustomGold ' href="#" onClick={handleSuppliersClick}>Suppliers</a></li>
+          <ul className='flex flex-col gap-6'>
+            <li>
+              <a className='hover:text-CustomGold flex items-center gap-2' href="#" onClick={handleInventoryClick}>
+                <BoxIcon size={16} />
+                Inventory
+              </a>
+            </li>
+            <li>
+              <a className='hover:text-CustomGold flex items-center gap-2' href="#" onClick={handleLicencesClick}>
+                <FileTextIcon size={16} />
+                Policies & Licences
+              </a>
+            </li>
+            <li>
+              <a className='hover:text-CustomGold flex items-center gap-2' href="#" onClick={handleSuppliersClick}>
+                <UsersIcon size={16} />
+                Suppliers
+              </a>
+            </li>
           </ul>
         </div>
         <div className="my-3">
           <h6 className="underline pb-2">Team Work</h6>
-          <p>Tasks</p>
-          <ul className="flex flex-col gap-2">
-            <li><a className='hover:text-CustomGold ' href="#">Pending Tasks</a></li>
-            <li><a className='hover:text-CustomGold ' href="#">Assign Tasks</a></li>
-            <li><a className='hover:text-CustomGold ' href="#">Submitted Tasks</a></li>
+          <ul className="flex flex-col gap-6">
+            <li>
+              <a className='hover:text-red-500 flex items-center gap-2' href="#">
+                <ClockIcon size={16} />
+                Pending Tasks
+              </a>
+            </li>
+            <li>
+              <a className='hover:text-green-500 flex items-center gap-2' href="#">
+                <CheckCircleIcon size={16} />
+                Submitted Tasks
+              </a>
+            </li>
           </ul>
         </div>
         <div>
           <h6 className="underline">Account</h6>
-          <ul>
-            <li><a href="#">Settings</a></li>
+          <ul className='pt-3'>
+            <li>
+              <a className='flex items-center gap-2' href="#">
+                <SettingsIcon size={16} />
+                Settings
+              </a>
+            </li>
           </ul>
+        </div>
+        <div>
+          <button className='flex items-center gap-2 pt-2' onClick={handleLogout}>
+            <LogOutIcon size={16} />
+            Log Out
+          </button>
+        </div>
+        <div className="mt-auto flex items-center gap-2 p-2">
+          <UserCircle2Icon size={24} />
+          <span>{username}</span>
         </div>
       </div>
       
