@@ -39,6 +39,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -305,12 +306,28 @@ export const Dashboard = () => {
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
                
+              <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="h-8 gap-1">
                       <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                         Filter
                       </span>
                     </Button>
-                 
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                   < DropdownMenuCheckboxItem checked>
+                      Active
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem>Low</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem>
+                      Adequate
+                    </DropdownMenuCheckboxItem>
+
+                   
+                  </DropdownMenuContent>
+                  </DropdownMenu>
                 <Button size="sm" variant="outline" className="h-8 gap-1">
                   <File className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
@@ -328,9 +345,9 @@ export const Dashboard = () => {
             <TabsContent value="all">
               <Card x-chunk="dashboard-06-chunk-0">
                 <CardHeader>
-                  <CardTitle>Items</CardTitle>
+                  <CardTitle>Inventory</CardTitle>
                   <CardDescription>
-                  Manage your products, update inventory, and track sales.
+                  Manage your products and track inventory.
                 </CardDescription>
                 
               </CardHeader>
@@ -341,7 +358,7 @@ export const Dashboard = () => {
                   <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="hidden w-[100px] sm:table-cell">
+                      <TableHead className=" w-[100px] sm:table-cell">
                         <span className="sr-only">Image</span>
                       </TableHead>
                       <TableHead>Name</TableHead>
