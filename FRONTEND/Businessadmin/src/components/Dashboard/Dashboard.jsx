@@ -29,6 +29,12 @@ const Dashboard = () => {
     event.preventDefault();
     setShowComponent('suppliers');
   };
+  const handleSupperUserClick = (event) => {
+    event.preventDefault();
+    window.location.href = "/admin";
+};
+
+
 
   const handleLogout = () => {
     const confirmLogout = window.confirm('Are you sure you want to log out?');
@@ -65,6 +71,12 @@ const Dashboard = () => {
             </li>
             <li>
               <a className='hover:text-CustomGold flex items-center gap-2' href="#" onClick={handleSuppliersClick}>
+                <UsersIcon size={16} />
+                Suppliers
+              </a>
+            </li>
+            <li>
+              <a className='hover:text-CustomGold flex items-center gap-2' href="#" onClick={handleSupperUserClick}>
                 <UsersIcon size={16} />
                 Suppliers
               </a>
