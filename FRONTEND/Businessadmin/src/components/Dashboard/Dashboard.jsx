@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Categories from './Categories';
 import Licences from './Licences';
 import Suppliers from './Suppliers';
+import StockIn from './ StockIn';
+import StockOut from './ StockOut';
+
 import { UserCircle2Icon, BoxIcon, FileTextIcon, UsersIcon, ClockIcon, CheckCircleIcon, SettingsIcon, LogOutIcon } from 'lucide-react';
 
 const Dashboard = () => {
@@ -19,7 +22,14 @@ const Dashboard = () => {
     event.preventDefault();
     setShowComponent('categories');
   };
-
+  const handleStockInClick = (event) => {
+    event.preventDefault();
+    setShowComponent('StockIn');
+  };
+  const handleStockOutClick = (event) => {
+    event.preventDefault();
+    setShowComponent('StockOut');
+  };
   const handleLicencesClick = (event) => {
     event.preventDefault();
     setShowComponent('licences');
@@ -29,12 +39,11 @@ const Dashboard = () => {
     event.preventDefault();
     setShowComponent('suppliers');
   };
+
   const handleSupperUserClick = (event) => {
     event.preventDefault();
     window.location.href = "/admin";
-};
-
-
+  };
 
   const handleLogout = () => {
     const confirmLogout = window.confirm('Are you sure you want to log out?');
@@ -50,18 +59,32 @@ const Dashboard = () => {
 
   return (
     <div className="h-screen flex">
-      <div className="bg-white text-black px-3 md:w-[200px] sm:w-[200px] h-full fixed flex flex-col gap-4 border tracking-wide z-10 overflow-y-auto">
+      <div className="bg-white text-black px-3 md:w-[200px] sm:w-[200px] h-full fixed flex flex-col gap-4 border tracking-wide z-10 ">
         <div className="flex justify-end p-2">
           {/* Optional close button for the sidebar */}
         </div>
         <div>
           <h6 className="text-l underline pb-3">Management</h6>
           <ul className='flex flex-col gap-6'>
-            <li>
+            <li className="relative group">
               <a className='hover:text-CustomGold flex items-center gap-2' href="#" onClick={handleInventoryClick}>
                 <BoxIcon size={16} />
                 Inventory
               </a>
+
+              {/* Dropdown Menu */}
+              <ul className="  top-0 hidden group-hover:block mt-2 bg-white shadow-lg rounded-md overflow-hidden">
+                <li>
+                  <a className="block px-4 py-2 hover:bg-gray-100" href="#" onClick={handleStockInClick}>
+                    Stock In
+                  </a>
+                </li>
+                <li>
+                  <a className="block px-4 py-2 hover:bg-gray-100" href="#" onClick={handleStockOutClick}>
+                    Stock Out
+                  </a>
+                </li>
+              </ul>
             </li>
             <li>
               <a className='hover:text-CustomGold flex items-center gap-2' href="#" onClick={handleLicencesClick}>
@@ -78,7 +101,7 @@ const Dashboard = () => {
             <li>
               <a className='hover:text-CustomGold flex items-center gap-2' href="#" onClick={handleSupperUserClick}>
                 <UsersIcon size={16} />
-                Suppliers
+                Admin
               </a>
             </li>
           </ul>
@@ -134,6 +157,9 @@ const Dashboard = () => {
           {showComponent === 'categories' && <Categories />}
           {showComponent === 'licences' && <Licences />}
           {showComponent === 'suppliers' && <Suppliers />}
+          {showComponent === 'StockIn' && <StockIn />}
+          {showComponent === 'StockOut' && <StockOut />}
+
         </div>
       </div>
     </div>
