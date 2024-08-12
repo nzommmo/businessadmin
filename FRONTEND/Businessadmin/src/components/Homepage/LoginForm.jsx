@@ -32,8 +32,11 @@ const LoginForm = ({ isvisible, onClose }) => {
       if (response.status === 200) {
         localStorage.setItem('accessToken', response.data.access);
         localStorage.setItem('refreshToken', response.data.refresh);
+        localStorage.setItem('username', username);
         // Redirect to the dashboard
         navigate('/dashboard');
+       
+        
       }
     } catch (error) {
       console.error('Error during login:', error);
