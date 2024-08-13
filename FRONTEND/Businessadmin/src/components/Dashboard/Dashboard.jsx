@@ -5,8 +5,14 @@ import Licences from './Licences';
 import Suppliers from './Suppliers';
 import StockIn from './ StockIn';
 import StockOut from './ StockOut';
+import Analytics from '../ui/Analytics';
+import Tasks from './Tasks/Tasks';
+import Pending from './Tasks/Pending';
+import Submitted from './Tasks/Submitted';
 
-import { UserCircle2Icon, BoxIcon, FileTextIcon, UsersIcon, ClockIcon, CheckCircleIcon, SettingsIcon, LogOutIcon } from 'lucide-react';
+
+
+import { UserCircle2Icon,ListChecks ,BoxIcon, FileTextIcon, UsersIcon, ClockIcon, CheckCircleIcon, SettingsIcon, LogOutIcon } from 'lucide-react';
 
 const Dashboard = () => {
   const [showComponent, setShowComponent] = useState('');
@@ -34,10 +40,26 @@ const Dashboard = () => {
     event.preventDefault();
     setShowComponent('licences');
   };
+  const handleTasksClick = (event) => {
+    event.preventDefault();
+    setShowComponent('Tasks');
+  };
 
   const handleSuppliersClick = (event) => {
     event.preventDefault();
     setShowComponent('suppliers');
+  };
+  const handleAnalyticsClick = (event) => {
+    event.preventDefault();
+    setShowComponent('Analytics');
+  };
+  const handlePendingClick = (event) => {
+    event.preventDefault();
+    setShowComponent('Pending');
+  };
+  const handleSubmittedClick = (event) => {
+    event.preventDefault();
+    setShowComponent('Submitted');
   };
 
   const handleSupperUserClick = (event) => {
@@ -104,19 +126,31 @@ const Dashboard = () => {
                 Admin
               </a>
             </li>
+            <li>
+              <a className='hover:text-CustomGold flex items-center gap-2' href="#" onClick={handleAnalyticsClick}>
+                <UsersIcon size={16} />
+                Analytics
+              </a>
+            </li>
           </ul>
         </div>
         <div className="my-3">
           <h6 className="underline pb-2">Team Work</h6>
           <ul className="flex flex-col gap-6">
+          <li>
+              <a className='hover:text-CustomGold flex items-center gap-2' href="#"  onClick={handleTasksClick}>
+                <ListChecks size={16} />
+                 Tasks
+              </a>
+            </li>
             <li>
-              <a className='hover:text-red-500 flex items-center gap-2' href="#">
+              <a className='hover:text-red-500 flex items-center gap-2' href="#" onClick={handlePendingClick}>
                 <ClockIcon size={16} />
                 Pending Tasks
               </a>
             </li>
             <li>
-              <a className='hover:text-green-500 flex items-center gap-2' href="#">
+              <a className='hover:text-green-500 flex items-center gap-2' href="#" onClick={handleSubmittedClick}>
                 <CheckCircleIcon size={16} />
                 Submitted Tasks
               </a>
@@ -159,6 +193,11 @@ const Dashboard = () => {
           {showComponent === 'suppliers' && <Suppliers />}
           {showComponent === 'StockIn' && <StockIn />}
           {showComponent === 'StockOut' && <StockOut />}
+          {showComponent === 'Analytics' && <Analytics />}
+          {showComponent === 'Tasks' && <Tasks />}
+          {showComponent === 'Pending' && <Pending />}
+          {showComponent === 'Submitted' && <Submitted />}
+
 
         </div>
       </div>
