@@ -6,15 +6,11 @@ import Suppliers from './Suppliers';
 import StockIn from './ StockIn';
 import StockOut from './ StockOut';
 import Analytics from '../ui/Analytics';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+import Tasks from './Tasks';
 
 
 
-import { UserCircle2Icon, BoxIcon, FileTextIcon, UsersIcon, ClockIcon, CheckCircleIcon, SettingsIcon, LogOutIcon } from 'lucide-react';
+import { UserCircle2Icon,ListChecks ,BoxIcon, FileTextIcon, UsersIcon, ClockIcon, CheckCircleIcon, SettingsIcon, LogOutIcon } from 'lucide-react';
 
 const Dashboard = () => {
   const [showComponent, setShowComponent] = useState('');
@@ -41,6 +37,10 @@ const Dashboard = () => {
   const handleLicencesClick = (event) => {
     event.preventDefault();
     setShowComponent('licences');
+  };
+  const handleTasksClick = (event) => {
+    event.preventDefault();
+    setShowComponent('Tasks');
   };
 
   const handleSuppliersClick = (event) => {
@@ -127,6 +127,12 @@ const Dashboard = () => {
         <div className="my-3">
           <h6 className="underline pb-2">Team Work</h6>
           <ul className="flex flex-col gap-6">
+          <li>
+              <a className='hover:text-CustomGold flex items-center gap-2' href="#"  onClick={handleTasksClick}>
+                <ListChecks size={16} />
+                 Tasks
+              </a>
+            </li>
             <li>
               <a className='hover:text-red-500 flex items-center gap-2' href="#">
                 <ClockIcon size={16} />
@@ -178,6 +184,7 @@ const Dashboard = () => {
           {showComponent === 'StockIn' && <StockIn />}
           {showComponent === 'StockOut' && <StockOut />}
           {showComponent === 'Analytics' && <Analytics />}
+          {showComponent === 'Tasks' && <Tasks />}
 
         </div>
       </div>
