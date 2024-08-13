@@ -25,8 +25,9 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
-  import { Card } from '../ui/card'
-const Tasks = () => {
+  import { Card } from '../../ui/card'
+
+const Pending = () => {
   return (
     <div className='flex items-center justify-center mt-20'>
     <Card>
@@ -81,40 +82,7 @@ const Tasks = () => {
                         </DropdownMenu>
 
                     </TableRow>
-                    <TableRow>
-                    <TableCell className="font-medium">
-                        Renew Business Permit
-                      </TableCell>
-                      <TableCell className="font-medium">
-                      Mary
-                      </TableCell>
-                      <TableCell className=" md:table-cell">
-                      15/8/2024
-
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className='bg-green-500'>Submitted</Badge>
-                      </TableCell>
-                      <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>Details</DropdownMenuItem>
-                            <DropdownMenuItem>Submit</DropdownMenuItem>
-
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-
-                    </TableRow>
+                   
 
                   </TableBody>
 
@@ -124,4 +92,4 @@ const Tasks = () => {
   )
 }
 
-export default Tasks
+export default Pending

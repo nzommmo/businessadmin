@@ -6,7 +6,9 @@ import Suppliers from './Suppliers';
 import StockIn from './ StockIn';
 import StockOut from './ StockOut';
 import Analytics from '../ui/Analytics';
-import Tasks from './Tasks';
+import Tasks from './Tasks/Tasks';
+import Pending from './Tasks/Pending';
+import Submitted from './Tasks/Submitted';
 
 
 
@@ -50,6 +52,14 @@ const Dashboard = () => {
   const handleAnalyticsClick = (event) => {
     event.preventDefault();
     setShowComponent('Analytics');
+  };
+  const handlePendingClick = (event) => {
+    event.preventDefault();
+    setShowComponent('Pending');
+  };
+  const handleSubmittedClick = (event) => {
+    event.preventDefault();
+    setShowComponent('Submitted');
   };
 
   const handleSupperUserClick = (event) => {
@@ -134,13 +144,13 @@ const Dashboard = () => {
               </a>
             </li>
             <li>
-              <a className='hover:text-red-500 flex items-center gap-2' href="#">
+              <a className='hover:text-red-500 flex items-center gap-2' href="#" onClick={handlePendingClick}>
                 <ClockIcon size={16} />
                 Pending Tasks
               </a>
             </li>
             <li>
-              <a className='hover:text-green-500 flex items-center gap-2' href="#">
+              <a className='hover:text-green-500 flex items-center gap-2' href="#" onClick={handleSubmittedClick}>
                 <CheckCircleIcon size={16} />
                 Submitted Tasks
               </a>
@@ -185,6 +195,9 @@ const Dashboard = () => {
           {showComponent === 'StockOut' && <StockOut />}
           {showComponent === 'Analytics' && <Analytics />}
           {showComponent === 'Tasks' && <Tasks />}
+          {showComponent === 'Pending' && <Pending />}
+          {showComponent === 'Submitted' && <Submitted />}
+
 
         </div>
       </div>
