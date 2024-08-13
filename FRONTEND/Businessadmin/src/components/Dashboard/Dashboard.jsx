@@ -5,6 +5,14 @@ import Licences from './Licences';
 import Suppliers from './Suppliers';
 import StockIn from './ StockIn';
 import StockOut from './ StockOut';
+import Analytics from '../ui/Analytics';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+
+
 
 import { UserCircle2Icon, BoxIcon, FileTextIcon, UsersIcon, ClockIcon, CheckCircleIcon, SettingsIcon, LogOutIcon } from 'lucide-react';
 
@@ -38,6 +46,10 @@ const Dashboard = () => {
   const handleSuppliersClick = (event) => {
     event.preventDefault();
     setShowComponent('suppliers');
+  };
+  const handleAnalyticsClick = (event) => {
+    event.preventDefault();
+    setShowComponent('Analytics');
   };
 
   const handleSupperUserClick = (event) => {
@@ -104,6 +116,12 @@ const Dashboard = () => {
                 Admin
               </a>
             </li>
+            <li>
+              <a className='hover:text-CustomGold flex items-center gap-2' href="#" onClick={handleAnalyticsClick}>
+                <UsersIcon size={16} />
+                Analytics
+              </a>
+            </li>
           </ul>
         </div>
         <div className="my-3">
@@ -159,6 +177,7 @@ const Dashboard = () => {
           {showComponent === 'suppliers' && <Suppliers />}
           {showComponent === 'StockIn' && <StockIn />}
           {showComponent === 'StockOut' && <StockOut />}
+          {showComponent === 'Analytics' && <Analytics />}
 
         </div>
       </div>
