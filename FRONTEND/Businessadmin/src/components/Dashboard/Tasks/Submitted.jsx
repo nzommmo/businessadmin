@@ -78,7 +78,6 @@ const Submitted = () => {
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem>Details</DropdownMenuItem>
-                            <DropdownMenuItem>Submit</DropdownMenuItem>
 
                           </DropdownMenuContent>
                         </DropdownMenu>
