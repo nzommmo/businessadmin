@@ -93,7 +93,7 @@ const Tasks = () => {
 
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className='bg-green-500'>Submitted</Badge>
+                        <Badge variant="outline" className='bg-green-500'>Completed</Badge>
                       </TableCell>
                       <DropdownMenu>
                           <DropdownMenuTrigger asChild>

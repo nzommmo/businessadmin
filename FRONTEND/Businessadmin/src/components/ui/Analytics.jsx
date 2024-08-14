@@ -746,7 +746,7 @@ export const Analytics =()=> {
                   },
                   {
                     date: "2024-01-07",
-                    calories: 345,
+                    calories: 690,
                   },
                 ]}
               >
