@@ -1,10 +1,10 @@
 {
     "version": 2,
     "builds": [
-      { "src": "businessadmin/wsgi.py", "use": "@vercel/python" }
+      { "src": "BACKEND/businessadmin/wsgi.py", "use": "@vercel/python" }
     ],
     "routes": [
-      { "src": "/api/(.*)", "dest": "businessadmin/wsgi.py" }
+      { "src": "/api/(.*)", "dest": "BACKEND/businessadmin/wsgi.py" }
     ]
   }
   
