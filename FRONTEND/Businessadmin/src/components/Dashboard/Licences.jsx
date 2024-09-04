@@ -1,8 +1,11 @@
 import React from 'react'
+import LicencesUI from '../ui/LicencesUi'
 
 const Licences = () => {
   return (
-    <div>Licences</div>
+    <>
+    <LicencesUI/>
+    </>
   )
 }
 
