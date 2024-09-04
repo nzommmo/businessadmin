@@ -106,5 +106,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## **Acknowledgements**
 
-- **Special Thanks**: Thanks to the team at Dotsavvy for their support and feedback.
-- **Special Thanks**: Thanks to [@Lewis](https://github.com/lewis-andy) for their assistance with setting up the initial project structure.
+
+- **Special Thanks**: Thanks to [@Lewis](https://github.com/lewis-andy) for their assistance as the backend developer and stategist.
