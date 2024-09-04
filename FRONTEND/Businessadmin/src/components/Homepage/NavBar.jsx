@@ -1,9 +1,16 @@
 import { Fragment, useState } from 'react';
 import LoginForm from './LoginForm';
 import logo from "../../assets/profile-pictures/logo.png";
+import { useNavigate } from 'react-router-dom';
+
 
 const NavBar = () => {
   const [showmodal, setshowmodal] = useState(false)
+  const navigate = useNavigate();
+  const handleLogin =()=>{
+    navigate('/Waitlist')
+
+  }
   return (
     <Fragment>
       <div className="relative h-screen">
@@ -18,10 +25,11 @@ const NavBar = () => {
                 </p>
               </div>
               <div className="md:flex items-center justify-end flex-shrink-0 rounded-md">
-                <ul className="mx-10 text-white text-16 text-right items-center flex justify-end md-gap-18 space-x-10">
+                <ul className="mx-10 text-white text-16 text-right items-center flex justify-end md-gap-18 space-x-5">
                   <li><a href="#">Home</a></li>
                   <li><a href="#">About Us</a></li>
-                  <li><a href="#">Contact Us</a></li>
+                  <li><a href="">Contact Us</a></li>
+                  <li className='bg-black px-4  rounded'><a href="#" onClick={handleLogin}>Waitlist</a></li>
                   <li>
                   <button className='bg-CustomGold px-4 text-black rounded'  href="LoginForm.jsx" onClick={()=>
               setshowmodal(true)
