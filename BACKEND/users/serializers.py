@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Supplier, Category, Item, Sale
+from .models import Supplier, Category, Item, Sale,License
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,3 +54,8 @@ class SaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sale
         fields = '__all__'
+
+class LicenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = License
+        fields = ['id', 'name', 'status', 'created_at', 'image']

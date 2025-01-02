@@ -9,6 +9,7 @@ import Analytics from '../ui/Analytics';
 import Tasks from './Tasks/Tasks';
 import Pending from './Tasks/Pending';
 import Submitted from './Tasks/Submitted';
+import Items from './Items';
 
 
 
@@ -66,6 +67,10 @@ const Dashboard = () => {
     event.preventDefault();
     window.location.href = "/admin";
   };
+  const handleViewItems = (event) => {
+    event.preventDefault();
+    setShowComponent('Items');
+  };
 
   const handleLogout = () => {
     const confirmLogout = window.confirm('Are you sure you want to log out?');
@@ -93,6 +98,7 @@ const Dashboard = () => {
                 <BoxIcon size={16} />
                 Inventory
               </a>
+             
 
               {/* Dropdown Menu */}
               <ul className="  top-0 hidden group-hover:block mt-2 bg-white shadow-lg rounded-md overflow-hidden">
@@ -106,6 +112,11 @@ const Dashboard = () => {
                     Stock Out
                   </a>
                 </li>
+                <li>
+                <a className='block px-4 py-2 hover:bg-gray-100' href="#" onClick={handleViewItems}>
+                Items
+              </a>
+              </li>
               </ul>
             </li>
             <li>
@@ -197,6 +208,7 @@ const Dashboard = () => {
           {showComponent === 'Tasks' && <Tasks />}
           {showComponent === 'Pending' && <Pending />}
           {showComponent === 'Submitted' && <Submitted />}
+          {showComponent === 'Items' && <Items />}
 
 
         </div>
