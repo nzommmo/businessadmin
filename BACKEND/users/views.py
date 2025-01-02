@@ -8,8 +8,8 @@ from rest_framework.views import APIView
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.conf import settings
-from .serializers import RegisterUserSerializer, UserSerializer, SupplierSerializer, CategorySerializer, ItemSerializer, SaleSerializer
-from .models import Supplier, Category, Item, Sale
+from .serializers import RegisterUserSerializer, UserSerializer, SupplierSerializer, CategorySerializer, ItemSerializer, SaleSerializer,LicenseSerializer
+from .models import Supplier, Category, Item, Sale,License
 
 User = get_user_model()
 
@@ -80,3 +80,89 @@ class ItemViewSet(viewsets.ModelViewSet):
 class SaleViewSet(viewsets.ModelViewSet):
     queryset = Sale.objects.all()
     serializer_class = SaleSerializer
+
+class ItemsByCategoryView(APIView):
+    def get(self, request, category_id):
+        try:
+            category = Category.objects.get(id=category_id)
+            items = Item.objects.filter(category=category)
+            serializer = ItemSerializer(items, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Category.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+class ItemSupplierView(APIView):
+    def get(self, request, item_id):
+        try:
+            item = Item.objects.get(id=item_id)
+            supplier = item.supplier  # Assuming `supplier` is a ForeignKey on the `Item` model
+            serializer = SupplierSerializer(supplier)
+            return Response(serializer.data)
+        except Item.DoesNotExist:
+            return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+class LicenseListCreateAPIView(generics.ListCreateAPIView):
+    queryset = License.objects.all()
+    serializer_class = LicenseSerializer
+
+
+class StockInView(APIView):
+    def patch(self, request, pk):
+        try:
+            # Fetch the item by its ID
+            item = Item.objects.get(pk=pk)
+            
+            # Get the quantity from the request data
+            additional_quantity = request.data.get('quantity', 0)
+
+            # Validate the quantity
+            if not isinstance(additional_quantity, int) or additional_quantity <= 0:
+                return Response({"error": "Quantity must be a positive integer"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Increment the item's quantity
+            item.quantity += additional_quantity
+            item.save()
+
+            # Return a success response
+            return Response({
+                "message": "Stock updated successfully",
+                "item_id": item.id,
+                "new_quantity": item.quantity,
+            }, status=status.HTTP_200_OK)
+        except Item.DoesNotExist:
+            return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class StockOutView(APIView):
+    def patch(self, request, pk):
+        try:
+            # Fetch the item by its ID
+            item = Item.objects.get(pk=pk)
+
+            # Get the quantity to subtract from the request data
+            quantity_to_subtract = request.data.get('quantity', 0)
+
+            # Validate the quantity
+            if not isinstance(quantity_to_subtract, int) or quantity_to_subtract <= 0:
+                return Response({"error": "Quantity must be a positive integer"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Ensure there is enough stock to subtract
+            if item.quantity < quantity_to_subtract:
+                return Response({"error": "Insufficient stock to subtract"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Decrease the item's quantity
+            item.quantity -= quantity_to_subtract
+            item.save()
+
+            # Return a success response
+            return Response({
+                "message": "Stock updated successfully",
+                "item_id": item.id,
+                "new_quantity": item.quantity,
+            }, status=status.HTTP_200_OK)
+
+        except Item.DoesNotExist:
+            return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

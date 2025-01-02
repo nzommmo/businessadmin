@@ -14,6 +14,12 @@ urlpatterns = [
     path('register/', views.RegisterAPIView.as_view(), name='register'),
     path('token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', views.MyTokenRefreshView.as_view(), name='token_refresh'),
-    
+    path('categories/<int:category_id>/items/',views.ItemsByCategoryView.as_view(), name='items-by-category'),
+    path('item/<int:item_id>/supplier/', views.ItemSupplierView.as_view(), name='item_supplier'),
+    path('licenses/', views.LicenseListCreateAPIView.as_view(), name='license-list-create'),
+    path('items/<int:pk>/stockin/', views.StockInView.as_view(), name='stock-in'),
+    path('stockout/<int:pk>/', views.StockOutView.as_view(), name='stock_out'),
+
+
 ]
 
