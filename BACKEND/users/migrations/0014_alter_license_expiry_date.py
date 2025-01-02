@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='license',
             name='expiry_date',
-            field=models.DateField(default='2025-01-01'),
+            field=models.DateField(default='2025-01-01'),  # Fixed date
         ),
     ]

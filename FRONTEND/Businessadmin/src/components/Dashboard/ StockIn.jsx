@@ -15,7 +15,6 @@ const StockIn = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedItem, setSelectedItem] = useState(""); // Added for item selection
   const [quantity, setQuantity] = useState("");
-  const [confirmedBy, setConfirmedBy] = useState("");
   const [categoryError, setCategoryError] = useState(null);
   const [itemError, setItemError] = useState(null); // Separate error for item fetching
   const [successMessage, setSuccessMessage] = useState(null); // Success message
@@ -52,10 +51,7 @@ const StockIn = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!selectedItem || !quantity || !confirmedBy) {
-      setErrorMessage("Please fill in all fields before submitting.");
-      return;
-    }
+  
 
     const data = {
       quantity: parseInt(quantity, 10), // Ensure the quantity is an integer
@@ -150,7 +146,7 @@ const StockIn = () => {
             <button
               className="bg-Customl text-white px-4 py-2 rounded"
               onClick={handleSubmit}
-              disabled={!selectedCategory || !selectedItem || !quantity || !confirmedBy} // Disable if any required field is missing
+              disabled={!selectedCategory || !selectedItem || !quantity } // Disable if any required field is missing
             >
               Submit
             </button>
