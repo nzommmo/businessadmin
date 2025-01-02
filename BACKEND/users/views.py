@@ -105,6 +105,10 @@ class LicenseListCreateAPIView(generics.ListCreateAPIView):
     queryset = License.objects.all()
     serializer_class = LicenseSerializer
 
+class LicenseDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = License.objects.all()
+    serializer_class = LicenseSerializer
+
 
 class StockInView(APIView):
     def patch(self, request, pk):
