@@ -8,7 +8,7 @@ import StockOut from './ StockOut';
 import Analytics from '../ui/Analytics';
 import Tasks from './Tasks/Tasks';
 import Pending from './Tasks/Pending';
-import Submitted from './Tasks/Submitted';
+import Completed from './Tasks/Completed';
 import Items from './Items';
 
 
@@ -60,7 +60,7 @@ const Dashboard = () => {
   };
   const handleSubmittedClick = (event) => {
     event.preventDefault();
-    setShowComponent('Submitted');
+    setShowComponent('Completed');
   };
 
   const handleSupperUserClick = (event) => {
@@ -163,7 +163,7 @@ const Dashboard = () => {
             <li>
               <a className='hover:text-green-500 flex items-center gap-2' href="#" onClick={handleSubmittedClick}>
                 <CheckCircleIcon size={16} />
-                Submitted Tasks
+                Completed Tasks
               </a>
             </li>
           </ul>
@@ -207,9 +207,8 @@ const Dashboard = () => {
           {showComponent === 'Analytics' && <Analytics />}
           {showComponent === 'Tasks' && <Tasks />}
           {showComponent === 'Pending' && <Pending />}
-          {showComponent === 'Submitted' && <Submitted />}
+          {showComponent === 'Completed' && <Completed />}
           {showComponent === 'Items' && <Items />}
-
 
         </div>
       </div>

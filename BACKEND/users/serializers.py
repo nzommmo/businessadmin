@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Supplier, Category, Item, Sale,License
+from .models import Supplier, Category, Item, Sale,License,Task
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -59,3 +59,9 @@ class LicenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = License
         fields = ['id', 'name', 'status', 'created_at', 'image']
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['id', 'name', 'description' ,'assigned_by', 'assigned_to', 'due_date', 'status']
+        read_only_fields = ['assigned_by']  # Prevent the frontend from manually setting 'assigned_by'

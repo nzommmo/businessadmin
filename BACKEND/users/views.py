@@ -8,8 +8,10 @@ from rest_framework.views import APIView
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.conf import settings
-from .serializers import RegisterUserSerializer, UserSerializer, SupplierSerializer, CategorySerializer, ItemSerializer, SaleSerializer,LicenseSerializer
-from .models import Supplier, Category, Item, Sale,License
+from .serializers import RegisterUserSerializer, UserSerializer, SupplierSerializer, CategorySerializer, ItemSerializer, SaleSerializer,LicenseSerializer,TaskSerializer
+from .models import Supplier, Category, Item, Sale,License,Task
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
 
 User = get_user_model()
 
@@ -170,3 +172,24 @@ class StockOutView(APIView):
             return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserListView(ListAPIView):
+    """
+    Endpoint to list all users.
+    """
+    queryset = User.objects.all()  # Retrieve all users
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]  # Restrict access to authenticated users
+
+class TaskViewSet(viewsets.ModelViewSet):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user  # Get the currently authenticated user
+        return Task.objects.filter(assigned_to=user)  # Filter tasks assigned to the logged-in user
+
+    def perform_create(self, serializer):
+        # Automatically set 'assigned_by' to the logged-in user (current authenticated user)
+        serializer.save(assigned_by=self.request.user)

@@ -7,6 +7,7 @@ router.register(r'suppliers', views.SupplierViewSet, basename='supplier')
 router.register(r'categories', views.CategoryViewSet, basename='category')
 router.register(r'items', views.ItemViewSet, basename='item')
 router.register(r'sales', views.SaleViewSet, basename='sale')
+router.register(r'tasks', views.TaskViewSet, basename='task')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('licenses/<int:pk>/', views.LicenseDetailView.as_view(), name='license-detail'),
     path('items/<int:pk>/stockin/', views.StockInView.as_view(), name='stock-in'),
     path('stockout/<int:pk>/', views.StockOutView.as_view(), name='stock_out'),
+    path('users/', views.UserListView.as_view(), name='user-list'),
 
 
 ]

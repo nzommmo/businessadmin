@@ -146,7 +146,7 @@ const Suppliers = () => {
         </div>
       )}
       <div className=''>
-        <div className="ms-10 me-5 my-4 grid gap-3 grid-cols-1 sm:grid-cols-2 grid-rows-2 flex gap-5 lg:grid-cols-5">
+        <div className="ms-10 me-5 my-4 grid gap-3 grid-cols-1 sm:grid-cols-2 grid-rows-2  lg:grid-cols-5">
           {error ? (
             <div className="text-red-500 mx-2 gap-20">{error}</div>
           ) : (
