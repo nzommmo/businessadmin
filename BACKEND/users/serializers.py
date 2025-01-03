@@ -1,15 +1,40 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Supplier, Category, Item, Sale,License,Task
+from django.contrib.auth.hashers import make_password,check_password
+
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True, required=False)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']  # Add more fields as needed
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['id', 'username', 'email', 'password', 'new_password']
 
+    def validate(self, data):
+        user = self.instance
+        if not user:
+            raise serializers.ValidationError("User not found.")
 
+        # Validate password
+        if not check_password(data['password'], user.password):
+            raise serializers.ValidationError({'password': 'Incorrect password.'})
 
+        return data
+
+    def update(self, instance, validated_data):
+        # Update email and username
+        instance.email = validated_data.get('email', instance.email)
+        instance.username = validated_data.get('username', instance.username)
+
+        # Update password if provided
+        new_password = validated_data.get('new_password')
+        if new_password:
+            instance.set_password(new_password)
+
+        instance.save()
+        return instance
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(max_length=100)

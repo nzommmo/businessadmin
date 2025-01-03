@@ -10,6 +10,7 @@ import Tasks from './Tasks/Tasks';
 import Pending from './Tasks/Pending';
 import Completed from './Tasks/Completed';
 import Items from './Items';
+import Settings from './Settings';
 
 
 
@@ -70,6 +71,10 @@ const Dashboard = () => {
   const handleViewItems = (event) => {
     event.preventDefault();
     setShowComponent('Items');
+  };
+  const handleViewSettings = (event) => {
+    event.preventDefault();
+    setShowComponent('Settings');
   };
 
   const handleLogout = () => {
@@ -172,7 +177,7 @@ const Dashboard = () => {
           <h6 className="underline">Account</h6>
           <ul className='pt-3'>
             <li>
-              <a className='flex items-center gap-2' href="#">
+              <a className='flex items-center gap-2' href="#" onClick={handleViewSettings}>
                 <SettingsIcon size={16} />
                 Settings
               </a>
@@ -209,6 +214,7 @@ const Dashboard = () => {
           {showComponent === 'Pending' && <Pending />}
           {showComponent === 'Completed' && <Completed />}
           {showComponent === 'Items' && <Items />}
+          {showComponent === 'Settings' && <Settings />}
 
         </div>
       </div>

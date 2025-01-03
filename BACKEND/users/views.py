@@ -12,6 +12,7 @@ from .serializers import RegisterUserSerializer, UserSerializer, SupplierSeriali
 from .models import Supplier, Category, Item, Sale,License,Task
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
 
 User = get_user_model()
 
@@ -193,3 +194,13 @@ class TaskViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Automatically set 'assigned_by' to the logged-in user (current authenticated user)
         serializer.save(assigned_by=self.request.user)
+
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'id'  # Use 'id' to retrieve specific users
+
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

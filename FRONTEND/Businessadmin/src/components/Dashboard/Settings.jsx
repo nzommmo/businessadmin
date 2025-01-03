@@ -9,43 +9,34 @@ const Settings = () => {
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [newEmail, setNewEmail] = useState('');
   const [currentEmail, setCurrentEmail] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const username = localStorage.getItem('username');
-      if (!username) {
+      const storedUsername = localStorage.getItem('username');
+      if (!storedUsername) {
         navigate('/');
         return;
       }
 
       try {
-        const response = await axiosInstance.get('/users');
-        
-        // Create users map with id as key and user object as value
-        const usersMap = {};
-        response.data.forEach(user => {
-          usersMap[user.id] = user;
-        });
-        
-        // Find the current user's ID by matching username
-        const currentUserId = Object.keys(usersMap).find(
-          id => usersMap[id].username === username
-        );
-
-        if (!currentUserId) {
-          throw new Error('User not found');
+        const response = await axiosInstance.get('/users/');
+        const currentUser = response.data.find(user => user.username === storedUsername);
+        if (!currentUser) {
+          console.error('User not found');
+          navigate('/');
+          return;
         }
 
-        setUserId(currentUserId);
-        setCurrentEmail(usersMap[currentUserId].email);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
+        setUserId(currentUser.id);
+        setUsername(currentUser.username);
+        setCurrentEmail(currentUser.email);
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
         navigate('/');
       }
     };
@@ -55,16 +46,31 @@ const Settings = () => {
 
   const handleEmailChange = async () => {
     if (!userId) return;
-    
+
+    if (!password) {
+      alert('Please enter your password to confirm changes.');
+      return;
+    }
+
     setLoading(true);
     try {
-      await axiosInstance.put(`/users/${userId}`, { email: newEmail });
+      await axiosInstance.put(`/users/${userId}/`, {
+        username,
+        email: newEmail,
+        password,
+      });
       setCurrentEmail(newEmail);
       setNewEmail('');
+      setPassword('');
       setShowEmailModal(false);
       alert('Email updated successfully');
     } catch (error) {
-      alert('Failed to update email');
+      if (error.response && error.response.data.password) {
+        alert('Password is incorrect. Please try again.');
+      } else {
+        console.error('Failed to update email:', error);
+        alert('Failed to update email. Please check your input and try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -72,54 +78,46 @@ const Settings = () => {
 
   const handlePasswordChange = async (e) => {
     if (!userId) return;
-    
+
     e.preventDefault();
     const formData = new FormData(e.target);
-    
+
+    setLoading(true);
     try {
-      await axiosInstance.put(`/users/${userId}`, {
-        current_password: formData.get('currentPassword'),
+      await axiosInstance.put(`/users/${userId}/`, {
+        username,
+        email: currentEmail,
+        password: formData.get('currentPassword'),
         new_password: formData.get('newPassword'),
       });
       alert('Password updated successfully');
       e.target.reset();
     } catch (error) {
-      alert('Failed to update password');
-    }
-  };
-
-  const handleLogout = () => {
-    const confirmLogout = window.confirm('Are you sure you want to log out?');
-    if (confirmLogout) {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('username');
-      navigate('/');
+      console.error('Failed to update password:', error);
+      alert('Failed to update password. Please check your input and try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDeleteAccount = async () => {
     if (!userId) return;
-    
+
     if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
       return;
     }
 
+    setLoading(true);
     try {
-      await axiosInstance.delete(`/users/${userId}`);
-      handleLogout();
+      await axiosInstance.delete(`/users/${userId}/`);
+      navigate('/'); // Navigate to the root directory after account deletion
     } catch (error) {
-      alert('Failed to delete account');
+      console.error('Failed to delete account:', error);
+      alert('Failed to delete account.');
+    } finally {
+      setLoading(false);
     }
   };
-
-  if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="flex justify-center items-center min-h-screen text-red-500">{error}</div>;
-  }
 
   return (
     <>
@@ -130,8 +128,8 @@ const Settings = () => {
             <p className="font-normal">Email address</p>
             <div className="flex justify-between gap-10">
               <p>Your email address is <span className="font-semibold italic hover:underline">{currentEmail}</span></p>
-              <button 
-                className="text-CustomGold underline" 
+              <button
+                className="text-CustomGold underline"
                 onClick={() => setShowEmailModal(true)}
                 disabled={loading}
               >Change</button>
@@ -155,7 +153,7 @@ const Settings = () => {
                   <button type="submit" className="bg-white text-black p-2 rounded hover:bg-CustomGold hover:text-white">Save Password</button>
                 </div>
               </form>
-              
+
               <div className="pt-10">
                 <hr className="opacity-25 pb-10" />
                 <div>
@@ -186,6 +184,14 @@ const Settings = () => {
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
               required
+            />
+            <Input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="mt-4"
             />
           </div>
           <DialogFooter>

@@ -28,6 +28,7 @@ const LoginForm = ({ isvisible, onClose }) => {
           'Content-Type': 'application/json',
         },
       });
+      console.log(response)
 
       if (response.status === 200) {
         localStorage.setItem('accessToken', response.data.access);
