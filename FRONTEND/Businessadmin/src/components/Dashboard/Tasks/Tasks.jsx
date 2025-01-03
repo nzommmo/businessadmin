@@ -89,15 +89,10 @@ const Tasks = () => {
     }
   };
 
-  const handleMarkAsCompleted = async (taskId) => {
+  const handleUpdateStatus = async (taskId, newStatus) => {
     try {
-      // Update the status of the task to "completed"
-      const updatedTask = { ...tasks.find((task) => task.id === taskId), status: 'completed' };
-      
-      // Send the update request to the backend
+      const updatedTask = { ...tasks.find((task) => task.id === taskId), status: newStatus };
       await axiosInstance.put(`/tasks/${taskId}/`, updatedTask);
-  
-      // Update the state with the new task list
       setTasks(tasks.map((task) => (task.id === taskId ? updatedTask : task)));
     } catch (err) {
       setError(err.message);
@@ -107,6 +102,16 @@ const Tasks = () => {
   const handleDetailsClick = (task) => {
     setSelectedTask(task);
     setShowDetailsModal(true);
+  };
+
+  // New delete handler function
+  const handleDelete = async (taskId) => {
+    try {
+      await axiosInstance.delete(`/tasks/${taskId}/`);
+      setTasks(tasks.filter((task) => task.id !== taskId));
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   // Function to format the date
@@ -254,7 +259,7 @@ const formatDate = (dateString) => {
           </div>
         )}
 
-        <Table className="lg:w-[800px]">
+<Table className="lg:w-[800px]">
           <TableHeader>
             <TableRow>
               <TableHead>Task</TableHead>
@@ -265,58 +270,67 @@ const formatDate = (dateString) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-  {tasks.map((task) => {
-    const formattedDueDate = task.due_date
-    ? formatDate(task.due_date)
-    : 'Not Set';
-  
+            {tasks.map((task) => {
+              const formattedDueDate = task.due_date
+                ? formatDate(task.due_date)
+                : 'Not Set';
 
-    return (
-      <TableRow key={task.id}>
-        <TableCell className="font-medium">{task.name}</TableCell>
-        <TableCell className="font-medium">{users[task.assigned_by] || 'Unknown'}</TableCell>
-        <TableCell className="md:table-cell">{formattedDueDate}</TableCell>
-        <TableCell>
-          <Badge 
-            variant="outline" 
-            className={
-              task.status === 'completed' 
-                ? 'bg-green-500' 
-                : task.status === 'in-progress'
-                ? 'bg-yellow-500' 
-                : 'bg-red-500'
-            }
-          >
-            {task.status}
-          </Badge>
-        </TableCell>
-        <TableCell>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button aria-haspopup="true" size="icon" variant="ghost">
-                <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => handleDetailsClick(task)}>Details</DropdownMenuItem>
-
-              {/* Show "Mark as Completed" only if the task's status is "pending" */}
-              {task.status === 'pending' && (
-                <DropdownMenuItem onClick={() => handleMarkAsCompleted(task.id)}>
-                  Mark as Completed
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </TableCell>
-      </TableRow>
-    );
-  })}
-</TableBody>
-
-   </Table>
+              return (
+                <TableRow key={task.id}>
+                  <TableCell className="font-medium">{task.name}</TableCell>
+                  <TableCell className="font-medium">{users[task.assigned_by] || 'Unknown'}</TableCell>
+                  <TableCell className="md:table-cell">{formattedDueDate}</TableCell>
+                  <TableCell>
+                    <Badge 
+                      variant="outline" 
+                      className={
+                        task.status === 'completed' 
+                          ? 'bg-green-500' 
+                          : task.status === 'in-progress'
+                          ? 'bg-yellow-500' 
+                          : 'bg-red-500'
+                      }
+                    >
+                      {task.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button aria-haspopup="true" size="icon" variant="ghost">
+                          <MoreHorizontal className="h-4 w-4" />
+                          <span className="sr-only">Toggle menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => handleDetailsClick(task)}>
+                          Details
+                        </DropdownMenuItem>
+                        {task.status === 'pending' && (
+                          <DropdownMenuItem onClick={() => handleUpdateStatus(task.id, 'in-progress')}>
+                            Mark as In Progress
+                          </DropdownMenuItem>
+                        )}
+                        {(task.status === 'pending' || task.status === 'in-progress') && (
+                          <DropdownMenuItem onClick={() => handleUpdateStatus(task.id, 'completed')}>
+                            Mark as Completed
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem 
+                          onClick={() => handleDelete(task.id)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </Card>
     </div>
   );
