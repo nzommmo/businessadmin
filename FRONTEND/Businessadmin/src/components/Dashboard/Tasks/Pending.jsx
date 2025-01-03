@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import axiosInstance from '@/constants/axiosInstance';
-import { format } from "date-fns"; // Import format from date-fns
+import { format } from "date-fns";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,15 +26,39 @@ const TaskModal = ({ task, isOpen, onClose, users }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center text-black bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-8 rounded-lg w-[400px]">
-        <h2 className="text-lg font-semibold">Task Details</h2>
-        <p><strong>Task Name:</strong> {task.name}</p>
-        <p><strong>Assigned By:</strong> {users[task.assigned_by] || 'Unknown'}</p>
-        <p><strong>Due Date:</strong> {format(new Date(task.due_date), "MMMM d, yyyy")}</p>
-        <p><strong>Description:</strong> {task.description || 'No description provided.'}</p>
-        <div className="mt-4 flex justify-end space-x-4">
-          <Button onClick={onClose} variant="outline">Close</Button>
+    <div className="fixed inset-0 text-black bg-black/50 z-50">
+      <div className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 sm:rounded-lg">
+        <div className="flex flex-row justify-between items-center">
+          <h3 className="text-lg font-semibold">{task?.name}</h3>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onClose}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <Label className="font-semibold">Description</Label>
+            <p className="mt-2">{task?.description}</p>
+          </div>
+          <div>
+            <Label className="font-semibold">Assigned By</Label>
+            <p className="mt-2">{users[task?.assigned_by] || 'Unknown'}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="font-semibold">Status</Label>
+            <Badge variant="outline" className="bg-red-500">
+              Pending
+            </Badge>
+          </div>
+          <div>
+            <Label className="font-semibold">Due Date</Label>
+            <p className="mt-2">
+              {task?.due_date ? format(new Date(task.due_date), "MMMM d, yyyy") : 'Not Set'}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -74,10 +99,10 @@ const Pending = () => {
     fetchData();
   }, []);
 
-  const handleMarkComplete = async (taskId) => {
+  const handleUpdateStatus = async (taskId, newStatus) => {
     try {
       await axiosInstance.patch(`/tasks/${taskId}/`, {
-        status: 'completed'
+        status: newStatus
       });
       await fetchData();
     } catch (err) {
@@ -100,9 +125,9 @@ const Pending = () => {
   if (tasks.length === 0) return <div className="flex items-center justify-center mt-20">No pending tasks</div>;
 
   return (
-    <div className='flex items-center justify-center mt-20'>
+    <div className="flex items-center justify-center mt-20">
       <Card>
-        <Table className='lg:w-[800px]'>
+        <Table className="lg:w-[800px]">
           <TableHeader>
             <TableRow>
               <TableHead>Task</TableHead>
@@ -117,9 +142,11 @@ const Pending = () => {
               <TableRow key={task.id}>
                 <TableCell className="font-medium">{task.name}</TableCell>
                 <TableCell className="font-medium">{users[task.assigned_by] || 'Unknown'}</TableCell>
-                <TableCell className="md:table-cell">{format(new Date(task.due_date), "MMMM d, yyyy")}</TableCell>
+                <TableCell className="md:table-cell">
+                  {format(new Date(task.due_date), "MMMM d, yyyy")}
+                </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className='bg-red-500'>Pending</Badge>
+                  <Badge variant="outline" className="bg-red-500">Pending</Badge>
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>
@@ -134,7 +161,10 @@ const Pending = () => {
                       <DropdownMenuItem onClick={() => handleShowDetails(task)}>
                         Details
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleMarkComplete(task.id)}>
+                      <DropdownMenuItem onClick={() => handleUpdateStatus(task.id, 'in-progress')}>
+                        Mark As In Progress
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleUpdateStatus(task.id, 'completed')}>
                         Mark As Complete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -146,7 +176,6 @@ const Pending = () => {
         </Table>
       </Card>
 
-      {/* Modal for Task Details */}
       <TaskModal
         task={selectedTask}
         isOpen={isModalOpen}

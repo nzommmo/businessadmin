@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import axiosInstance from '@/constants/axiosInstance';
 import {
     DropdownMenu,
@@ -31,6 +32,8 @@ const Completed = () => {
   const [users, setUsers] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,6 +61,11 @@ const Completed = () => {
     fetchData();
   }, []);
 
+  const handleDetailsClick = (task) => {
+    setSelectedTask(task);
+    setShowDetailsModal(true);
+  };
+
   if (isLoading) return <div className="flex items-center justify-center mt-20">Loading tasks...</div>;
   if (error) return <div className="flex items-center justify-center mt-20 text-red-500">Error: {error}</div>;
   if (tasks.length === 0) return <div className="flex items-center justify-center mt-20">No completed tasks</div>;
@@ -65,6 +73,51 @@ const Completed = () => {
   return (
     <div className="flex items-center justify-center mt-20">
       <Card>
+        {showDetailsModal && (
+          <div className="fixed inset-0 text-black bg-black/50 z-50">
+            <div className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 sm:rounded-lg">
+              <div className="flex flex-row justify-between items-center">
+                <h3 className="text-lg font-semibold">{selectedTask?.name}</h3>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    setSelectedTask(null);
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <Label className="font-semibold">Description</Label>
+                  <p className="mt-2">{selectedTask?.description}</p>
+                </div>
+                <div>
+                  <Label className="font-semibold">Assigned By</Label>
+                  <p className="mt-2">{users[selectedTask?.assigned_by] || 'Unknown'}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Label className="font-semibold">Status</Label>
+                  <Badge variant="outline" className="bg-green-500">
+                    Completed
+                  </Badge>
+                </div>
+                <div>
+                  <Label className="font-semibold">Due Date</Label>
+                  <p className="mt-2">
+                    {selectedTask?.due_date ? formatDate(selectedTask.due_date) : 'Not Set'}
+                  </p>
+                </div>
+                <div>
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <Table className="lg:w-[800px]">
           <TableHeader>
             <TableRow>
@@ -94,7 +147,9 @@ const Completed = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>Details</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDetailsClick(task)}>
+                        Details
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
