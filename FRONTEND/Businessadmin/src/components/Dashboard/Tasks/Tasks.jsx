@@ -1,203 +1,342 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import React, { useEffect, useState } from 'react';
+import { MoreHorizontal, PlusCircle, X } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import axiosInstance from '@/constants/axiosInstance';
-import { useNavigate } from 'react-router-dom';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card } from '@/components/ui/card';
+import { Textarea } from "@/components/ui/textarea";
 
-const Settings = () => {
-  const [showEmailModal, setShowEmailModal] = useState(false);
-  const [newEmail, setNewEmail] = useState('');
-  const [currentEmail, setCurrentEmail] = useState('');
-  const [loading, setLoading] = useState(true);
+const Tasks = () => {
+  const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const navigate = useNavigate();
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    assigned_to: '',
+    due_date: '',
+    status: 'pending'
+  });
+
+  const fetchData = async () => {
+    try {
+      const [tasksRes, usersRes] = await Promise.all([
+        axiosInstance.get('/tasks/'),
+        axiosInstance.get('/users/')
+      ]);
+      
+      const usersMap = {};
+      usersRes.data.forEach(user => {
+        usersMap[user.id] = user.username;
+      });
+      
+      setUsers(usersMap);
+      setTasks(tasksRes.data);
+      setIsLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const username = localStorage.getItem('username');
-      if (!username) {
-        navigate('/');
-        return;
-      }
+    fetchData();
+  }, []);
 
-      try {
-        const response = await axiosInstance.get('/users');
-        
-        // Create users map with id as key and user object as value
-        const usersMap = {};
-        response.data.forEach(user => {
-          usersMap[user.id] = user;
-        });
-        
-        // Find the current user's ID by matching username
-        const currentUserId = Object.keys(usersMap).find(
-          id => usersMap[id].username === username
-        );
-
-        if (!currentUserId) {
-          throw new Error('User not found');
-        }
-
-        setUserId(currentUserId);
-        setCurrentEmail(usersMap[currentUserId].email);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-        navigate('/');
-      }
-    };
-
-    fetchCurrentUser();
-  }, [navigate]);
-
-  const handleEmailChange = async () => {
-    if (!userId) return;
-    
-    setLoading(true);
-    try {
-      await axiosInstance.put(`/users/${userId}`, { email: newEmail });
-      setCurrentEmail(newEmail);
-      setNewEmail('');
-      setShowEmailModal(false);
-      alert('Email updated successfully');
-    } catch (error) {
-      alert('Failed to update email');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePasswordChange = async (e) => {
-    if (!userId) return;
-    
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    
     try {
-      await axiosInstance.put(`/users/${userId}`, {
-        current_password: formData.get('currentPassword'),
-        new_password: formData.get('newPassword'),
+      const response = await axiosInstance.post('/tasks/', formData);
+      setTasks([...tasks, response.data]);
+      setShowCreateModal(false);
+      setFormData({
+        name: '',
+        description: '',
+        assigned_to: '',
+        due_date: '',
+        status: 'pending'
       });
-      alert('Password updated successfully');
-      e.target.reset();
-    } catch (error) {
-      alert('Failed to update password');
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-  const handleLogout = () => {
-    const confirmLogout = window.confirm('Are you sure you want to log out?');
-    if (confirmLogout) {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('username');
-      navigate('/');
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    if (!userId) return;
-    
-    if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      return;
-    }
-
+  const handleUpdateStatus = async (taskId, newStatus) => {
     try {
-      await axiosInstance.delete(`/users/${userId}`);
-      handleLogout();
-    } catch (error) {
-      alert('Failed to delete account');
+      const updatedTask = { ...tasks.find((task) => task.id === taskId), status: newStatus };
+      await axiosInstance.put(`/tasks/${taskId}/`, updatedTask);
+      setTasks(tasks.map((task) => (task.id === taskId ? updatedTask : task)));
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-  if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-  }
+  const handleDetailsClick = (task) => {
+    setSelectedTask(task);
+    setShowDetailsModal(true);
+  };
 
-  if (error) {
-    return <div className="flex justify-center items-center min-h-screen text-red-500">{error}</div>;
-  }
+  const handleDelete = async (taskId) => {
+    try {
+      await axiosInstance.delete(`/tasks/${taskId}/`);
+      setTasks(tasks.filter((task) => task.id !== taskId));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  if (isLoading) return <div className="flex items-center justify-center mt-20">Loading tasks...</div>;
+  if (error) return <div className="flex items-center justify-center mt-20 text-red-500">Error: {error}</div>;
 
   return (
-    <>
-      <div className="relative sm:p-6">
-        <div className="flex flex-col items-center text-start mt-20 justify-center">
-          <div className="flex flex-col gap-5">
-            <h1 className="font-semibold">Account Settings</h1>
-            <p className="font-normal">Email address</p>
-            <div className="flex justify-between gap-10">
-              <p>Your email address is <span className="font-semibold italic hover:underline">{currentEmail}</span></p>
-              <button 
-                className="text-CustomGold underline" 
-                onClick={() => setShowEmailModal(true)}
-                disabled={loading}
-              >Change</button>
-            </div>
+    <div className="flex items-center justify-center mt-20">
+      <Card>
+        <div className="flex items-end p-5 justify-end">
+          <Button size="sm" className="h-8 gap-1" onClick={() => setShowCreateModal(true)}>
+            <PlusCircle className="h-3.5 w-3.5" />
+            Assign Task
+          </Button>
+        </div>
 
-            <div className="relative">
-              <p className="font-normal">Password</p>
-              <form onSubmit={handlePasswordChange}>
-                <div className="flex lg:flex-row flex-col gap-5">
-                  <div className="mt-5 flex flex-col">
-                    <label htmlFor="newPassword">New Password</label>
-                    <input type="password" id="newPassword" name="newPassword" className="border rounded py-2 px-4" required />
-                  </div>
-                  <div className="mt-5 flex flex-col">
-                    <label htmlFor="currentPassword">Current Password</label>
-                    <input type="password" id="currentPassword" name="currentPassword" className="border rounded py-2 px-4" required />
-                  </div>
+        {showCreateModal && (
+          <div className="fixed inset-0 bg-black/50 z-50">
+            <div className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg">
+              <div className="flex flex-row justify-between items-center">
+                <h3 className="text-lg font-semibold">Assign New Task</h3>
+                <Button variant="ghost" size="icon" onClick={() => setShowCreateModal(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Task Name</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    required
+                  />
                 </div>
-                <div>
-                  <p className="my-5">Can't remember your password? <span className="cursor-pointer underline">Reset your password</span></p>
-                  <button type="submit" className="bg-white text-black p-2 rounded hover:bg-CustomGold hover:text-white">Save Password</button>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    required
+                  />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="assigned_to">Assigned To</Label>
+                  <Select 
+                    value={formData.assigned_to}
+                    onValueChange={(value) => setFormData({...formData, assigned_to: value})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select user" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(users).map(([id, name]) => (
+                        <SelectItem key={id} value={id}>{name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="due_date">Due Date</Label>
+                  <Input
+                    id="due_date"
+                    type="date"
+                    value={formData.due_date}
+                    onChange={(e) => setFormData({...formData, due_date: e.target.value})}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="status">Status</Label>
+                  <Select
+                    value={formData.status}
+                    onValueChange={(value) => setFormData({...formData, status: value})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="in-progress">In Progress</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button type="submit" className="w-full">Create Task</Button>
               </form>
-              
-              <div className="pt-10">
-                <hr className="opacity-25 pb-10" />
+            </div>
+          </div>
+        )}
+
+        {showDetailsModal && (
+          <div className="fixed inset-0 text-black bg-black/50 z-50">
+            <div className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 sm:rounded-lg">
+              <div className="flex flex-row justify-between items-center">
+                <h3 className="text-lg font-semibold">{selectedTask?.name}</h3>
+                <Button variant="ghost" size="icon" onClick={() => {
+                  setShowDetailsModal(false);
+                  setSelectedTask(null);
+                }}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="space-y-4">
                 <div>
-                  <h1 className="font-semibold pb-5">Delete Account</h1>
-                  <div className="flex flex-col gap-1">
-                    <p>Would you like to delete your account?</p>
-                    <p>Deleting your account will remove all content associated with it.</p>
-                  </div>
-                  <div className="py-5">
-                    <button onClick={handleDeleteAccount} className="bg-white text-black p-2 rounded hover:bg-red-600 hover:text-white">Delete Account</button>
-                  </div>
+                  <Label className="font-semibold">Description</Label>
+                  <p className="mt-2">{selectedTask?.description}</p>
+                </div>
+                <div>
+                  <Label className="font-semibold">Assigned By</Label>
+                  <p className="mt-2">{users[selectedTask?.assigned_by] || 'Unknown'}</p>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <Label className="font-semibold">Status</Label>
+                  <Badge
+                    variant="outline"
+                    className={` ${
+                      selectedTask?.status === 'completed'
+                        ? 'bg-green-500'
+                        : selectedTask?.status === 'in-progress'
+                        ? 'bg-yellow-500'
+                        : 'bg-red-500'
+                    }`}
+                  >
+                    {selectedTask?.status}
+                  </Badge>
+                </div>
+                <div>
+                  <Label className="font-semibold">Due Date</Label>
+                  <p className="mt-2">
+                    {selectedTask?.due_date ? formatDate(selectedTask?.due_date) : 'Not Set'}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        )}
 
-      <Dialog open={showEmailModal} onOpenChange={setShowEmailModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Change Email Address</DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <Input
-              type="email"
-              placeholder="Enter new email address"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-              required
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowEmailModal(false)} disabled={loading}>Cancel</Button>
-            <Button onClick={handleEmailChange} disabled={loading}>
-              {loading ? 'Saving...' : 'Save Changes'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+        <Table className="lg:w-[800px]">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Task</TableHead>
+              <TableHead>Assigned By</TableHead>
+              <TableHead className="md:table-cell">Due Date</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead><span className="sr-only">Actions</span></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tasks.length > 0 ? (
+              tasks.map((task) => {
+                const formattedDueDate = task.due_date
+                  ? formatDate(task.due_date)
+                  : 'Not Set';
+
+                return (
+                  <TableRow key={task.id}>
+                    <TableCell className="font-medium">{task.name}</TableCell>
+                    <TableCell className="font-medium">{users[task.assigned_by] || 'Unknown'}</TableCell>
+                    <TableCell className="md:table-cell">{formattedDueDate}</TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant="outline" 
+                        className={
+                          task.status === 'completed' 
+                            ? 'bg-green-500' 
+                            : task.status === 'in-progress'
+                            ? 'bg-yellow-500' 
+                            : 'bg-red-500'
+                        }
+                      >
+                        {task.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button aria-haspopup="true" size="icon" variant="ghost">
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem onClick={() => handleDetailsClick(task)}>
+                            Details
+                          </DropdownMenuItem>
+                          {task.status === 'pending' && (
+                            <DropdownMenuItem onClick={() => handleUpdateStatus(task.id, 'in-progress')}>
+                              Mark as In Progress
+                            </DropdownMenuItem>
+                          )}
+                          {(task.status === 'pending' || task.status === 'in-progress') && (
+                            <DropdownMenuItem onClick={() => handleUpdateStatus(task.id, 'completed')}>
+                              Mark as Completed
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuItem 
+                            onClick={() => handleDelete(task.id)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center h-24 text-muted-foreground">
+                  No tasks available
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </Card>
+    </div>
   );
 };
 
-export default Settings;
+export default Tasks;
