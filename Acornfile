@@ -31,7 +31,7 @@ containers: web: {
 	dependsOn: ["dbinit"]
 	consumes: ["db"]
 
-	if args.dev {dirs: "/app": "./mysite"}
+	if args.dev {dirs: "/app": "./BACKEND"}
 
 	env: {
 		MARIADB_USER:          "@{service.db.secrets.admin.username}"
@@ -43,6 +43,6 @@ containers: web: {
 }
 
 images: app: containerBuild: {
-	context:    "./mysite"
-	dockerfile: "./mysite/Dockerfile"
+	context:    "./BACKEND"
+	dockerfile: "./BACKEND/Dockerfile"
 }
