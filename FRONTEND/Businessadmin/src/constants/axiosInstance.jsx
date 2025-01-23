@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000', // Your API base URL
+  baseURL: 'https://businessadmin-vbwe.onrender.com/', // Your API base URL
 });
 
 // Add a request interceptor to add the access token to headers
@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
       const refreshToken = localStorage.getItem('refreshToken');
       try {
         // Send a request to refresh the token
-        const response = await axios.post('http://127.0.0.1:8000/token/refresh/', {
+        const response = await axios.post('https://businessadmin-vbwe.onrender.com/token/refresh/', {
           refresh: refreshToken,
         });
 
