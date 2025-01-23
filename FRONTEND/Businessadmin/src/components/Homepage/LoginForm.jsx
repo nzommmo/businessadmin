@@ -20,7 +20,7 @@ const LoginForm = ({ isvisible, onClose }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/token/', {
+      const response = await axios.post('https://businessadmin-vbwe.onrender.com/token/', {
         username,
         password,
       }, {
