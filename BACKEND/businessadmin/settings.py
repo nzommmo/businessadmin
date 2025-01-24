@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
+
 
 # Load environment variables from .env
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -114,17 +116,22 @@ WSGI_APPLICATION = 'businessadmin.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),  # Database name
-        'USER': os.getenv('DB_USER'),  # Database username
-        'PASSWORD': os.getenv('DB_PASSWORD'),  # Database password
-        'HOST': os.getenv('DB_HOST'),  # Database host
-        'PORT': os.getenv('DB_PORT', '5432'),  # Database port (default is 5432)
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('DB_NAME'),  # Database name
+#         'USER': os.getenv('DB_USER'),  # Database username
+#         'PASSWORD': os.getenv('DB_PASSWORD'),  # Database password
+#         'HOST': os.getenv('DB_HOST'),  # Database host
+#         'PORT': os.getenv('DB_PORT', '5432'),  # Database port (default is 5432)
+#     }
+# }
 
+DATABASES = {
+    'default': dj_database_url.parse(
+        'postgres://businessadminuser:11hWwKRNyWkORzojMoEFg5JR1joSfuXK@dpg-cu97tc56l47c73d7693g-a.oregon-postgres.render.com:5432/businessadmin'
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
