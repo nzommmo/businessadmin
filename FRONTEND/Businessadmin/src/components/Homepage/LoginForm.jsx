@@ -57,7 +57,7 @@ const LoginForm = ({ isvisible, onClose }) => {
         <div className='w-[400px] '>
           <div className='bg-black text-white  p-2 rounded flex flex-col my-0 pt-'>
 
-            <button className='text-Customl text-xl place-self-end z-50' onClick={onClose}>
+            <button className='text-white font-bold pr-2 text-xl place-self-end z-50' onClick={onClose}>
               X
             </button>
             <div className='flex flex-col justify-center items-center'>
