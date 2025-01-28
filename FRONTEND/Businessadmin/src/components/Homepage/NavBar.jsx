@@ -13,7 +13,7 @@ const NavBar = () => {
   }
   return (
     <Fragment>
-      <div className="relative h-screen">
+      <div className=" h-screen">
         <div className="absolute inset-0 bg-custom-image bg-cover bg-center opacity-30"></div>
         <div className="relative z-10 flex justify-center h-full">
           <div className="top-0 z-50 rounded-md h-10 w-full">
@@ -24,11 +24,11 @@ const NavBar = () => {
                   Business <span className="text-CustomGold">Admin</span>
                 </p>
               </div>
-              <div className="md:flex items-center justify-end flex-shrink-0 rounded-md">
+              <div className="md:flex items-center justify-end flex-shrink-0 rounded-md ">
                 <ul className="mx-10 text-white text-16 text-right items-center flex justify-end md-gap-18 space-x-5">
-                  <li><a href="#">Home</a></li>
-                  <li><a href="#">About Us</a></li>
-                  <li><a href="">Contact Us</a></li>
+                  <li><a href="#" className='lg:block hidden'>Home</a></li>
+                  <li><a href="#" className='hidden'>About Us</a></li>
+                  <li><a href="" className='hidden'>Contact Us</a></li>
                   <li className='bg-black px-4  rounded'><a href="#" onClick={handleLogin}>Waitlist</a></li>
                   <li>
                   <button className='bg-CustomGold px-4 text-black rounded'  href="LoginForm.jsx" onClick={()=>
@@ -41,13 +41,13 @@ const NavBar = () => {
             <div className="md:flex justify-center w-full">
               <div className="md:w-1/2 my-20">
                 <div className="flex justify-start">
-                  <p className="text-3xl">YOUR</p>
+                  <p className="text-2xl pl-2">YOUR</p>
                 </div>
                 <div className="flex justify-center">
-                  <p className="text-9xl font-light text-slate-400">ULTIMATE</p>
+                  <p className="lg:text-9xl text-7xl  font-light text-slate-400">ULTIMATE</p>
                 </div>
                 <div className="flex justify-end">
-                  <p className="text-2xl">BUSINESS SOLUTION</p>
+                  <p className="text-2xl pr-2">BUSINESS SOLUTION</p>
                 </div>
               </div>
             </div>
