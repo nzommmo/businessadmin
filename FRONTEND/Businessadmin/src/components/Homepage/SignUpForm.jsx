@@ -81,7 +81,7 @@ const SignUpForm = ({ isopen, closeform }) => {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="my-2 text- bg-white-400 rounded w-[300px] h-[28px]"
+                  className="my-2 border bg-white-400 rounded w-[300px] h-[28px]"
                   required
                 />
                 <br />
@@ -91,7 +91,7 @@ const SignUpForm = ({ isopen, closeform }) => {
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="my-2 bg-white-400 rounded w-[300px] h-[28px]"
+                  className="my-2 border bg-white-400 rounded w-[300px] h-[28px]"
                   required
                 />
                 <br />
@@ -101,7 +101,7 @@ const SignUpForm = ({ isopen, closeform }) => {
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="my-2 bg-white-400 rounded w-[300px] h-[28px]"
+                  className="my-2 border bg-white-400 rounded w-[300px] h-[28px]"
                   required
                 />
                 <br />
@@ -111,7 +111,7 @@ const SignUpForm = ({ isopen, closeform }) => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="my-2 bg-white-400 rounded w-[300px] h-[28px]"
+                  className="my-2 border bg-white-400 rounded w-[300px] h-[28px]"
                   required
                 />
                 <br />
@@ -121,7 +121,7 @@ const SignUpForm = ({ isopen, closeform }) => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-white-400 rounded w-[300px] h-[28px]"
+                  className="bg-white-400 border rounded w-[300px] h-[28px]"
                   required
                 />
                 <br />
