@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from "react";
-import axiosInstance from "/src/constants/axiosInstance";
-
+import React, { useState, useEffect } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -8,153 +12,191 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import axiosInstance from '/src/constants/axiosInstance';
 
-const StockIn = () => {
-  const [categories, setCategories] = useState([]);
-  const [items, setItems] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedItem, setSelectedItem] = useState(""); // Added for item selection
-  const [quantity, setQuantity] = useState("");
-  const [categoryError, setCategoryError] = useState(null);
-  const [itemError, setItemError] = useState(null); // Separate error for item fetching
-  const [successMessage, setSuccessMessage] = useState(null); // Success message
-  const [errorMessage, setErrorMessage] = useState(null); // Error message
+const AddItemForm = ({ categoryId, categoryName, isOpen, onClose, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    quantity: 0,
+    price: '',
+    supplier: ''
+  });
 
-  // Fetch categories on mount
+  const [suppliers, setSuppliers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    axiosInstance
-      .get("/categories/")
-      .then((response) => setCategories(response.data))
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-        setCategoryError(`Failed to load categories: ${error.message}`);
-      });
-  }, []);
-
-  // Fetch items when a category is selected
-  useEffect(() => {
-    if (selectedCategory) {
-      axiosInstance
-        .get(`/categories/${selectedCategory}/items/`)
-        .then((response) => setItems(response.data))
-        .catch((error) => {
-          console.error("Error fetching items:", error);
-          setItemError(`Failed to load items: ${error.message}`);
-        });
-    }
-    // Reset items and selected item when category changes
-    setItems([]);
-    setSelectedItem("");
-  }, [selectedCategory]);
-
-  // Handle form submission
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-  
-
-    const data = {
-      quantity: parseInt(quantity, 10), // Ensure the quantity is an integer
+    const fetchSuppliers = async () => {
+      try {
+        const response = await axiosInstance.get('/suppliers/');
+        setSuppliers(response.data);
+        if (response.data.length > 0) {
+          setFormData(prev => ({ ...prev, supplier: response.data[0].id.toString() }));
+        }
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching suppliers:', err);
+        setError('Failed to load suppliers');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    axiosInstance
-      .patch(`/items/${selectedItem}/stockin/`, data) // Use the item ID in the endpoint
-      .then((response) => {
-        setSuccessMessage(`Stock updated! New quantity: ${response.data.new_quantity}`);
-        setErrorMessage(null); // Clear any previous error messages
-        setQuantity(""); // Clear the quantity field after successful update
-      })
-      .catch((error) => {
-        console.error("Error updating stock:", error);
-        setErrorMessage("Failed to update stock. Please try again.");
-        setSuccessMessage(null); // Clear any previous success messages
-      });
+    fetchSuppliers();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSupplierChange = (value) => {
+    setFormData(prev => ({
+      ...prev,
+      supplier: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({
+      ...formData,
+      category: categoryId,
+      price: parseFloat(formData.price).toFixed(2),
+      quantity: parseInt(formData.quantity),
+      supplier: parseInt(formData.supplier)
+    });
+    setFormData({
+      name: '',
+      description: '',
+      quantity: 0,
+      price: '',
+      supplier: suppliers.length > 0 ? suppliers[0].id.toString() : ''
+    });
   };
 
   return (
-    <div className="relative">
-
-      <div className="flex items-center justify-center mt-20">
-        <div className="my-4 w-[250px]">
-          <div className="mb-5">
-        {successMessage && <div className="text-green-500">{successMessage}</div>}
-        {errorMessage && <div className="text-red-500">{errorMessage}</div>}
-        </div>
-          
-          <div className="space-y-2">
-            <h1>Stock In Card</h1>
-
-            {/* Display error for category fetching */}
-            {categoryError && <div className="text-red-500">{categoryError}</div>}
-
-            <div className="flex gap-2">
-              {/* Category selection */}
-              <Select onValueChange={(value) => setSelectedCategory(value)}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Item selection */}
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add Item to {categoryName}</DialogTitle>
+        </DialogHeader>
+        {error ? (
+          <div className="text-red-500 text-sm">{error}</div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium mb-1">
+                Item Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full border rounded px-3 py-2"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="description" className="block text-sm font-medium mb-1">
+                Description
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full border rounded px-3 py-2 h-24"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="quantity" className="block text-sm font-medium mb-1">
+                  Quantity
+                </label>
+                <input
+                  id="quantity"
+                  name="quantity"
+                  type="number"
+                  min="0"
+                  value={formData.quantity}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="price" className="block text-sm font-medium mb-1">
+                  Price
+                </label>
+                <input
+                  id="price"
+                  name="price"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.price}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2"
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Supplier
+              </label>
               <Select
-                onValueChange={(value) => setSelectedItem(value)}
-                disabled={!selectedCategory || items.length === 0} // Disabled if no category or no items
+                onValueChange={handleSupplierChange}
+                value={formData.supplier}
+                disabled={loading || suppliers.length === 0}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Item" />
+                  <SelectValue placeholder="Select a supplier" />
                 </SelectTrigger>
                 <SelectContent>
-                  {items.length > 0 ? (
-                    items.map((item) => (
-                      <SelectItem key={item.id} value={item.id}>
-                        {item.name}
+                  {suppliers.length > 0 ? (
+                    suppliers.map((supplier) => (
+                      <SelectItem key={supplier.id} value={supplier.id.toString()}>
+                        {supplier.name}
                       </SelectItem>
                     ))
                   ) : (
                     <div className="text-gray-500 px-4 py-2">
-                      {selectedCategory
-                        ? "No items available for this category"
-                        : "Select a category first"}
+                      {loading ? "Loading suppliers..." : "No suppliers available"}
                     </div>
                   )}
                 </SelectContent>
               </Select>
             </div>
-
-            {/* Display error for item fetching */}
-            {itemError && <div className="text-red-500">{itemError}</div>}
-
-            {/* Quantity input */}
-            <input
-              type="number"
-              className="border px-4 py-2 rounded w-full"
-              placeholder="Quantity"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-            />
-
-           
-
-            {/* Submit button */}
-            <button
-              className="bg-Customl text-white px-4 py-2 rounded"
-              onClick={handleSubmit}
-              disabled={!selectedCategory || !selectedItem || !quantity } // Disable if any required field is missing
-            >
-              Submit
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div className="flex justify-end space-x-2 pt-4">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 border rounded hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-CustomGold text-white rounded hover:bg-opacity-90"
+                disabled={loading || suppliers.length === 0}
+              >
+                Add Item
+              </button>
+            </div>
+          </form>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default StockIn;
+export default AddItemForm;

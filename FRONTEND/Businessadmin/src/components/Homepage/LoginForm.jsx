@@ -68,7 +68,7 @@ const LoginForm = ({ isvisible, onClose }) => {
                   <label htmlFor="Username">Username</label> <br />
                   <input
                     type="text"
-                    className='my-2 bg-white-400 rounded w-[300px] h-[28px]'
+                    className='my-2 bg-white-400 rounded w-[300px] h-[28px] border'
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
@@ -77,7 +77,7 @@ const LoginForm = ({ isvisible, onClose }) => {
                   <input
                     type="password"
                     name="password"
-                    className='bg-whire-400 rounded w-[300px] h-[28px]'
+                    className='bg-white-400 border rounded w-[300px] h-[28px]'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
