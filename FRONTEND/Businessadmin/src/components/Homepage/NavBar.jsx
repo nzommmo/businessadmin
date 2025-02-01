@@ -18,9 +18,9 @@ const NavBar = () => {
   };
 
   const menuItems = [
-    { label: 'Home', href: '#', className: 'lg:block text-black hover:text-CustomGold' },
-    { label: 'About Us', href: '#', className: 'block text-black hover:text-CustomGold' },
-    { label: 'Contact Us', href: '#', className: 'block text-black hover:text-CustomGold' },
+    { label: 'Home', href: '#', className: 'lg:block text-white hover:text-CustomGold' },
+    { label: 'About Us', href: '#', className: 'block text-white hover:text-CustomGold' },
+    { label: 'Contact Us', href: '#', className: 'block text-white hover:text-CustomGold' },
     { 
       label: 'Waitlist', 
       href: '#', 
